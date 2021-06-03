@@ -11,7 +11,7 @@ const bj_random_seed = 314159
 var suit = [13]int8{2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11}
 var deck [52]int8
 
-// When the Shoe.shuffle method is called, we store a pointer to the show
+// When the Shoe.shuffle method is called, we store a pointer to the shoe
 // in 'curShoe', so our 'swap' function can find it. (Crude.)
 
 var curShoe *Shoe
@@ -30,6 +30,9 @@ func init() {
 	}
 }
 
+// Shoe represents a casino 'shoe' of some number of decks of cards.
+// Cards are dealt from here as hands are played.
+
 type Shoe struct {
 	// numDecks    int
 	cards      []int8
@@ -39,6 +42,9 @@ type Shoe struct {
 	// thisRound []int
 	// trackRounds bool
 }
+
+// newShoe creates a new Shoe and fills it with the number of decks requested.
+// Also, we seed the random number generator with a known value.
 
 func newShoe(decks int) *Shoe {
 	var s Shoe
@@ -54,24 +60,36 @@ func newShoe(decks int) *Shoe {
 	return &s
 }
 
+// randomize seeds the randome number generator with the current time.
+// If you don't call this, you will get the same sequence of cards dealt for the
+// entire run.
+
 func (s *Shoe) randomize() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+// shuffle shuffles the cards in the shoe.
 func (s *Shoe) shuffle() {
 	curShoe = s
 	rand.Shuffle(s.shoeSize, swap)
 }
 
+// remaining returns the number of cards still in the shoe.
+
 func (s *Shoe) remaining() int {
 	return s.shoeSize - s.next
 }
+
+// deal returns the next card from the shoe. No check is made for an empty shoe.
+// The call is responsible for not allowing this to happen.
 
 func (s *Shoe) deal() int8 {
 	c := s.cards[s.next]
 	s.next += 1
 	return c
 }
+
+// swap is called by rand.Shuffle() to swap two cards in the shoe.
 
 func swap(i, j int) {
 	s := *curShoe

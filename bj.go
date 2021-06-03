@@ -1,3 +1,5 @@
+// Bj is a blackjack casino simulator
+
 package main
 
 // TMP
