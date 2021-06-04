@@ -1,5 +1,11 @@
 package main
 
+import (
+	// "fmt"
+	"strconv"
+	"strings"
+)
+
 type Hand struct {
 	blackjack bool
 	doubled   bool
@@ -41,6 +47,17 @@ func newSplitHand(s *Shoe, betAmount int, firstCard int8) *Hand {
 	return &h
 }
 
+func (h *Hand) String() string {
+	var sb strings.Builder
+	for _, s := range h.cards {
+		sb.WriteString(" ")
+		sb.WriteString(strconv.Itoa(int(s)))
+	}
+	sb.WriteString(" total: ")
+	sb.WriteString(strconv.Itoa(int(h.value)))
+	return sb.String()
+}
+
 func (h *Hand) updateValue() {
 	var sum int8
 	for _, n := range h.cards {
@@ -72,7 +89,10 @@ func (h *Hand) isPair() bool {
 	if h.cards[0] == h.cards[1] {
 		return true
 	}
-	if h.cards[0]+h.cards[1] == ace+softAce {
+	if h.cards[0] == ace && h.cards[1] == softAce {
+		return true
+	}
+	if h.cards[0] == softAce && h.cards[1] == ace {
 		return true
 	}
 	return false
