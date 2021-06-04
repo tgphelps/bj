@@ -8,11 +8,37 @@ type Hand struct {
 	no_hit    bool
 	noDouble  bool
 	obsolete  bool
-	shoe      Shoe
+	shoe      *Shoe
 	betAmount int
 	value     int8
 	bigAces   int
 	cards     []int8
+}
+
+func newHand(s *Shoe, betAmount int) *Hand {
+	var h Hand
+	h.shoe = s
+	h.betAmount = betAmount
+	h.cards = append(h.cards, s.deal())
+	h.cards = append(h.cards, s.deal())
+	h.updateValue()
+	if h.value == 21 {
+		h.blackjack = true
+	}
+	if h.bigAces == 2 {
+		h.harden()
+	}
+	return &h
+}
+
+func newSplitHand(s *Shoe, betAmount int, firstCard int8) *Hand {
+	var h Hand
+	h.shoe = s
+	h.betAmount = betAmount
+	h.cards = append(h.cards, firstCard)
+	h.cards = append(h.cards, s.deal())
+	h.isSplit = true
+	return &h
 }
 
 func (h *Hand) updateValue() {
