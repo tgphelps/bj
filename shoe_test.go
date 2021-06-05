@@ -12,7 +12,7 @@ func TestShoe1(t *testing.T) {
 		t.Error("Bad initial `card count")
 	}
 	s.shuffle()
-	fmt.Println(s.cards) // just to look
+	// fmt.Println(s.cards) // just to look
 
 	if s.remaining() != 2*52 {
 		t.Error("Bad remaining() 1")
@@ -43,5 +43,5 @@ func TestShoe1(t *testing.T) {
 	// Just to look.
 	s.randomize()
 	s.shuffle()
-	fmt.Println(s.cards)
+	// fmt.Println(s.cards)
 }
