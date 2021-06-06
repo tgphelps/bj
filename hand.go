@@ -58,7 +58,7 @@ func newSplitHand(s *Shoe, betAmount int, firstCard int8) *Hand {
 	h.cards = append(h.cards, s.deal())
 	h.isSplit = true
 	h.finish()
-	h.blackjack = false
+	h.blackjack = false // No blackjacks on split pairs
 	return &h
 }
 

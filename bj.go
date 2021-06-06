@@ -6,7 +6,7 @@ package main
 //
 // Usage:
 //    bj [-d <flags>] [-v] [-t] [-n <rounds>] [-s <seats>] [--test] \
-//       HOUSE-RULES STRATEGY
+//       CONFIG STRATEGY
 //
 // Options:
 //     -h  --help           Show this screen, and exit.
@@ -20,6 +20,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -35,12 +36,20 @@ var repeatable bool
 var traceFlags []int8
 var numRounds int
 var numSeats int
-
-var traceString string
-var traceList []string
+var configFile string
+var strategyFile string
 
 func main() {
+	if !handleArguments() {
+		return
+	}
+}
+
+func handleArguments() bool {
 	var printVersion bool
+	var traceString string
+	var traceList []string
+
 	flag.BoolVar(&verbose, "v", false, "verbose output to stdout")
 	flag.IntVar(&numRounds, "n", 1, "number of rounds to deal")
 	flag.IntVar(&numSeats, "s", 1, "number of table seats in use")
@@ -50,7 +59,7 @@ func main() {
 	flag.Parse()
 	if printVersion {
 		fmt.Printf("BJ version: %s\n", version)
-		return
+		return false
 	}
 	fmt.Printf("verbose = %v\n", verbose)
 	fmt.Printf("repeatable = %v\n", repeatable)
@@ -63,10 +72,24 @@ func main() {
 		for _, s := range traceList {
 			n, err := strconv.Atoi(s)
 			if err != nil {
-				panic("bad trace flag")
+				log.Fatalf("FATAL: bad trace flag: %v", traceList)
 			}
 			traceFlags = append(traceFlags, int8(n))
 		}
 		fmt.Printf("trace flags: %v\n", traceFlags)
 	}
+	if flag.NArg() != 2 {
+		usage()
+		return false
+	} else {
+		configFile = flag.Arg(0)
+		strategyFile = flag.Arg(1)
+	}
+	return true
+}
+
+func usage() {
+	fmt.Println("usage:")
+	fmt.Println("  ./bj <options> <config-file> <strategy-file>")
+	fmt.Println("Enter './bj -h' to see all options.")
 }
