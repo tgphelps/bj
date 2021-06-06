@@ -2,6 +2,7 @@ package main
 
 import (
 	// "fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -103,7 +104,7 @@ func (h *Hand) double() {
 }
 
 // harden changes the value of the first ace in the hand from 11 to 1.
-// It will panic if called with a hand that isn't soft.
+// It will crash if called with a hand that isn't soft.
 
 func (h *Hand) harden() {
 	firstAce := findCard(ace, h.cards)
@@ -115,7 +116,7 @@ func (h *Hand) harden() {
 
 func (h *Hand) isPair() bool {
 	if len(h.cards) != 2 {
-		panic("isPair: not 2-card hand")
+		log.Fatal("isPair: not 2-card hand")
 	}
 	if h.cards[0] == h.cards[1] {
 		return true
@@ -133,7 +134,7 @@ func (h *Hand) isPair() bool {
 
 func (h *Hand) hit() {
 	if h.obsolete {
-		panic("hand.hit: obsolete")
+		log.Fatal("hand.hit: obsolete")
 	}
 	c := h.shoe.deal()
 	h.cards = append(h.cards, c)
@@ -160,7 +161,8 @@ func findCard(card int8, hand []int8) int {
 			return i
 		}
 	}
-	panic("find_card no find")
+	log.Fatal("find_card no find")
+	return 0 // not reached
 }
 
 // utility function to count the number of a given card in the hand.

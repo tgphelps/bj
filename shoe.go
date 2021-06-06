@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"math/rand"
 	"time"
 	// "fmt"
@@ -28,7 +29,7 @@ func init() {
 	}
 	// fmt.Println(deck)
 	if len(deck) != 52 {
-		panic("bad deck creation")
+		log.Fatal("bad deck creation")
 	}
 }
 
