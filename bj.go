@@ -19,6 +19,7 @@ package main
 //     -r                   Use repeatable card sequence.
 
 import (
+	// "fmt"
 	"log"
 	"os"
 
@@ -45,7 +46,7 @@ var numSeats int        // default: 1
 var configFile string   // mandatory
 var strategyFile string // mandatory
 
-var traceName [2]string = [2]string{"ALWAYS", "INIT"}
+var traceName = [...]string{"ALWAYS", "INIT"}
 
 var trf *os.File
 
@@ -62,6 +63,9 @@ func main() {
 		}
 		trc.Trace(trAlways, "trace open")
 	}
+	if trc.Tracing(trInit) {
+		traceInitialParams()
+	}
 }
 
 func openTraceFile() {
@@ -75,4 +79,14 @@ func openTraceFile() {
 func closeTraceFile() {
 	trc.Trace(trAlways, "trace close")
 	trf.Close()
+}
+
+func traceInitialParams() {
+	trc.Trace(trInit, "verbose: %v", verbose)
+	trc.Trace(trInit, "repeatable: %v", repeatable)
+	trc.Trace(trInit, "traceFlags: %v", traceFlags)
+	trc.Trace(trInit, "numRounds: %d", numRounds)
+	trc.Trace(trInit, "numSeats: %d", numSeats)
+	trc.Trace(trInit, "configFile: %s", configFile)
+	trc.Trace(trInit, "strategyFile: %s", strategyFile)
 }
