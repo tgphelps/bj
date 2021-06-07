@@ -18,6 +18,13 @@ package main
 //     -s <seats>           Number of players to play.
 //     -r                   Use repeatable card sequence.
 
+import (
+	"log"
+	"os"
+
+	"tgphelps.com/trc"
+)
+
 // Global constants.
 
 const version = "0.0.1"
@@ -28,7 +35,7 @@ const (
 	trInit
 )
 
-// Global variables that never changed after being set.
+// Global variables that never change after being set.
 
 var verbose bool        // default: false
 var repeatable bool     // default: false
@@ -38,8 +45,34 @@ var numSeats int        // default: 1
 var configFile string   // mandatory
 var strategyFile string // mandatory
 
+var traceName [2]string = [2]string{"ALWAYS", "INIT"}
+
+var trf *os.File
+
 func main() {
 	if !processCmdLine() {
 		return
 	}
+	if len(traceFlags) > 0 {
+		openTraceFile()
+		defer closeTraceFile()
+		trc.TraceOpen(trf)
+		for n := range traceFlags {
+			trc.TraceOn(n, traceName[n])
+		}
+		trc.Trace(trAlways, "trace open")
+	}
+}
+
+func openTraceFile() {
+	f, err := os.Create(traceFileName)
+	if err != nil {
+		log.Fatal("FATAL: ", err)
+	}
+	trf = f
+}
+
+func closeTraceFile() {
+	trc.Trace(trAlways, "trace close")
+	trf.Close()
 }

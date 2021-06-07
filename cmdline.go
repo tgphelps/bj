@@ -36,7 +36,7 @@ func processCmdLine() bool {
 	}
 	if len(traceString) > 0 {
 		traceList = strings.Split(traceString, ",")
-		fmt.Printf("trace strings: %v\n", traceList)
+		// fmt.Printf("trace strings: %v\n", traceList)
 		for _, s := range traceList {
 			n, err := strconv.Atoi(s)
 			if err != nil {
@@ -45,7 +45,7 @@ func processCmdLine() bool {
 			}
 			traceFlags = append(traceFlags, int8(n))
 		}
-		fmt.Printf("trace flags: %v\n", traceFlags)
+		// fmt.Printf("trace flags: %v\n", traceFlags)
 	}
 	if flag.NArg() != 2 {
 		usage()
@@ -60,5 +60,5 @@ func processCmdLine() bool {
 func usage() {
 	fmt.Println("usage:")
 	fmt.Println("  ./bj <options> <config-file> <strategy-file>")
-	fmt.Println("Enter './bj -h' to see all options.")
+	fmt.Println("Use -h to see all options.")
 }
