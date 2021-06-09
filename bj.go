@@ -20,6 +20,7 @@ package main
 
 import (
 	// "fmt"
+	"fmt"
 	"log"
 	"os"
 
@@ -46,12 +47,26 @@ var numSeats int        // default: 1
 var configFile string   // mandatory
 var strategyFile string // mandatory
 
+type Config struct {
+	numDecks        int
+	hitS17          bool
+	dasAllowed      bool
+	maxSplitHands   int
+	maxSplitAces    int
+	canHitSplitAces bool
+	canSurrender    bool
+}
+
+var cfg Config
+
 var traceName = [...]string{"ALWAYS", "INIT"}
 
 var trf *os.File
 
 func main() {
-	if !processCmdLine() {
+	err := processCmdLine()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	if len(traceFlags) > 0 {
@@ -66,10 +81,13 @@ func main() {
 	if trc.Tracing(trInit) {
 		traceInitialParams()
 	}
-	if !readConfigFile(configFile) {
+	err = readConfigFile(configFile)
+	if err != nil {
 		return
 	}
-	if !readStrategyFile(strategyFile) {
+	err = readStrategyFile(strategyFile)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 }

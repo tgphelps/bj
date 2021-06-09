@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -11,7 +12,7 @@ import (
 // It returns true if all is well, and false if there were
 // errors.
 
-func processCmdLine() bool {
+func processCmdLine() error {
 	var printVersion bool
 	var traceString string
 	var traceList []string
@@ -25,7 +26,7 @@ func processCmdLine() bool {
 	flag.Parse()
 	if printVersion {
 		fmt.Printf("BJ version: %s\n", version)
-		return false
+		os.Exit(0)
 	}
 	if verbose {
 		fmt.Printf("verbose = %v\n", verbose)
@@ -40,8 +41,8 @@ func processCmdLine() bool {
 		for _, s := range traceList {
 			n, err := strconv.Atoi(s)
 			if err != nil {
-				fmt.Printf("FATAL: bad trace flag: %v\n", traceList)
-				return false
+				return fmt.Errorf("FATAL: bad trace flag: %v", traceList)
+
 			}
 			traceFlags = append(traceFlags, int8(n))
 		}
@@ -49,12 +50,12 @@ func processCmdLine() bool {
 	}
 	if flag.NArg() != 2 {
 		usage()
-		return false
+		os.Exit(0)
 	} else {
 		configFile = flag.Arg(0)
 		strategyFile = flag.Arg(1)
 	}
-	return true
+	return nil
 }
 
 func usage() {
