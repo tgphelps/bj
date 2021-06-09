@@ -66,6 +66,12 @@ func main() {
 	if trc.Tracing(trInit) {
 		traceInitialParams()
 	}
+	if !readConfigFile(configFile) {
+		return
+	}
+	if !readStrategyFile(strategyFile) {
+		return
+	}
 }
 
 func openTraceFile() {
