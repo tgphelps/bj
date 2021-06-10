@@ -32,6 +32,7 @@ import (
 const version = "0.0.1"
 const traceFileName = "TRACE.txt"
 
+// Trace points for calls to the trc package.
 const (
 	trAlways = iota
 	trInit
@@ -57,10 +58,24 @@ type Config struct {
 	canSurrender    bool
 }
 
+// Config contains all the house rules
 var cfg Config
 
+// A StrPoint represents a decision to be made. It consists of 3 numbers:
+// 1. key - what we might do (hit, double, split, etc.)
+// 2. val - the value (count) of the hand
+// 3. upcard - the dealer's upcard.
+type StrPoint [3]int8
+
+// strategy is a logical 'set' of StrPoints to with the strategy says
+// 'yes, do it'. This map is built by readStrategyFile, and is
+// consulted during the play of a hand.
+var strategy map[StrPoint]bool
+
+// Trace point names that will appear in the trace file.
 var traceName = [...]string{"ALWAYS", "INIT"}
 
+// The open trace file, used by the trc package.
 var trf *os.File
 
 func main() {

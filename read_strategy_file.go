@@ -15,6 +15,7 @@ func readStrategyFile(strategyile string) error {
 		return fmt.Errorf("FATAL: %s", err)
 	}
 	defer f.Close()
+	strategy = make(map[StrPoint]bool)
 	r := bufio.NewReader(f)
 	for {
 		var s string
@@ -30,10 +31,24 @@ func readStrategyFile(strategyile string) error {
 			if !strings.HasPrefix(s, "#") {
 				a := strings.Fields(s)
 				if len(a) > 0 {
-					fmt.Printf("%v\n", a)
+					// XXX
+					panic("Strategy file not implemented")
 				}
 			}
 		}
 	}
 	return nil
+}
+
+func NewStrPoint(key int8, val int8, upcard int8) StrPoint {
+	var s StrPoint
+	s[0] = key
+	s[1] = val
+	s[2] = upcard
+	return s
+}
+
+func inStrategyMap(key int8, val int8, upcard int8) bool {
+	s := NewStrPoint(key, val, upcard)
+	return strategy[s]
 }
