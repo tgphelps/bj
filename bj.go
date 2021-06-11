@@ -56,6 +56,7 @@ type Config struct {
 	maxSplitAces    int
 	canHitSplitAces bool
 	canSurrender    bool
+	penetrationPct  float32
 }
 
 // Config contains all the house rules
@@ -110,6 +111,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Printf("penetration: %f\n", cfg.penetrationPct)
 	err = readStrategyFile(strategyFile)
 	if err != nil {
 		fmt.Println(err)
