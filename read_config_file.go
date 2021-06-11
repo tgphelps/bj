@@ -15,7 +15,7 @@ import (
 // readConfigFile reads the house configuration from a text file.
 // It returns true if it was successfully read, else false.
 
-func readConfigFile(cfgFile string) error {
+func readConfigFile(cfgFile string, cfg *Config) error {
 	f, err := os.Open(cfgFile)
 	if err != nil {
 		return fmt.Errorf("FATAL: %s", err)
@@ -39,7 +39,7 @@ func readConfigFile(cfgFile string) error {
 					continue
 				}
 				if len(a) == 3 && a[1] == "=" {
-					setConfigVar(a[0], a[2])
+					setConfigVar(a[0], a[2], cfg)
 				} else {
 					// trc.TraceIf(trAlways, "bad config: %v", a)
 					return fmt.Errorf("FATAL: bad config: %v", a)
@@ -51,7 +51,7 @@ func readConfigFile(cfgFile string) error {
 	return nil
 }
 
-func setConfigVar(tag string, val string) {
+func setConfigVar(tag string, val string, cfg *Config) {
 	trc.TraceIf(trInit, "config: %s %s", tag, val)
 	n, err := strconv.Atoi(val)
 	if err != nil {

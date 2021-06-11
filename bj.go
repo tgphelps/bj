@@ -48,8 +48,6 @@ type CmdLineParams struct {
 	strategyFile string
 }
 
-// var params CmdLineParams
-
 type Config struct {
 	numDecks        int
 	hitS17          bool
@@ -61,14 +59,13 @@ type Config struct {
 	penetrationPct  float32
 }
 
-// Config contains all the house rules
-var cfg Config
-
 // A StrPoint represents a decision to be made. It consists of 3 numbers:
 // 1. key - what we might do (hit, double, split, etc.)
 // 2. val - the value (count) of the hand
 // 3. upcard - the dealer's upcard.
 type StrPoint [3]int8
+
+type Strategy map[StrPoint]bool
 
 // These values can appear in the 'key' position of a StrPoint.
 const (
@@ -83,16 +80,20 @@ const (
 // strategy is a logical 'set' of StrPoints to with the strategy says
 // 'yes, do it'. This map is built by readStrategyFile, and is
 // consulted during the play of a hand.
-var strategy map[StrPoint]bool
+// var strategy map[StrPoint]bool
 
 // Trace point names that will appear in the trace file.
+// This is really a constant.
 var traceName = [...]string{"ALWAYS", "INIT"}
 
 // The open trace file, used by the trc package.
-var trf *os.File
+//var trf *os.File
 
 func main() {
 	var params CmdLineParams
+	var cfg Config
+	var strategy map[StrPoint]bool
+	var trf *os.File
 
 	err := processCmdLine(&params)
 	if err != nil {
@@ -100,8 +101,8 @@ func main() {
 		return
 	}
 	if len(params.traceFlags) > 0 {
-		openTraceFile()
-		defer closeTraceFile()
+		trf = openTraceFile()
+		defer closeTraceFile(trf)
 		trc.TraceOpen(trf)
 		for n := range params.traceFlags {
 			trc.TraceOn(n, traceName[n])
@@ -111,28 +112,34 @@ func main() {
 	if trc.Tracing(trInit) {
 		traceInitialParams(&params)
 	}
-	err = readConfigFile(params.configFile)
+	err = readConfigFile(params.configFile, &cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
+	strategy = make(Strategy)
 	// fmt.Printf("penetration: %f\n", cfg.penetrationPct)
-	err = readStrategyFile(params.strategyFile)
+	err = readStrategyFile(params.strategyFile, strategy)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	// XXX testing
+	fmt.Println("strategy:")
+	for k, v := range strategy {
+		fmt.Printf("strat: %v %v\n", k, v)
+	}
 	// Initialization is complete. Now, play blackjack.
 }
 
-func openTraceFile() {
+func openTraceFile() *os.File {
 	f, err := os.Create(traceFileName)
 	if err != nil {
 		log.Fatal("FATAL: ", err)
 	}
-	trf = f
+	return f
 }
 
-func closeTraceFile() {
+func closeTraceFile(trf *os.File) {
 	trc.Trace(trAlways, "trace close")
 	trf.Close()
 }

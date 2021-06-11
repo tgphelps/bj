@@ -11,14 +11,15 @@ import (
 	"tgphelps.com/trc"
 )
 
-func readStrategyFile(strategyFile string) error {
+func readStrategyFile(strategyFile string, strategy Strategy) error {
+	var s StrPoint
 	f, err := os.Open(strategyFile)
 	if err != nil {
 		return fmt.Errorf("FATAL: %s", err)
 	}
 	defer f.Close()
 	trc.TraceIf(trInit, "reading strategy file")
-	strategy = make(map[StrPoint]bool)
+	// strategy = make(map[StrPoint]bool)
 	r := bufio.NewReader(f)
 	for {
 		var s string
@@ -40,7 +41,14 @@ func readStrategyFile(strategyFile string) error {
 			}
 		}
 	}
+	// XXX testing
+	s[0] = 1
+	s[1] = 2
+	s[2] = 3
+	strategy[s] = true
 	trc.TraceIf(trInit, "end strategy file")
+	// XXX
+
 	return nil
 }
 
@@ -52,7 +60,7 @@ func NewStrPoint(key int8, val int8, upcard int8) StrPoint {
 	return s
 }
 
-func inStrategyMap(key int8, val int8, upcard int8) bool {
-	s := NewStrPoint(key, val, upcard)
-	return strategy[s]
-}
+// func inStrategyMap(key int8, val int8, upcard int8) bool {
+// s := NewStrPoint(key, val, upcard)
+// return strategy[s]
+// }
