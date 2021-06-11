@@ -21,6 +21,7 @@ func readConfigFile(cfgFile string) error {
 		return fmt.Errorf("FATAL: %s", err)
 	}
 	defer f.Close()
+	trc.TraceIf(trInit, "reading config file")
 	r := bufio.NewReader(f)
 	for {
 		var s string
@@ -40,11 +41,13 @@ func readConfigFile(cfgFile string) error {
 				if len(a) == 3 && a[1] == "=" {
 					setConfigVar(a[0], a[2])
 				} else {
-					trc.TraceIf(trAlways, "bad config: %v", a)
+					// trc.TraceIf(trAlways, "bad config: %v", a)
+					return fmt.Errorf("FATAL: bad config: %v", a)
 				}
 			}
 		}
 	}
+	trc.TraceIf(trInit, "end config file")
 	return nil
 }
 

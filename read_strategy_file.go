@@ -7,6 +7,8 @@ import (
 	"io"
 	"os"
 	"strings"
+
+	"tgphelps.com/trc"
 )
 
 func readStrategyFile(strategyile string) error {
@@ -15,6 +17,7 @@ func readStrategyFile(strategyile string) error {
 		return fmt.Errorf("FATAL: %s", err)
 	}
 	defer f.Close()
+	trc.TraceIf(trInit, "reading strategy file")
 	strategy = make(map[StrPoint]bool)
 	r := bufio.NewReader(f)
 	for {
@@ -37,6 +40,7 @@ func readStrategyFile(strategyile string) error {
 			}
 		}
 	}
+	trc.TraceIf(trInit, "end strategy file")
 	return nil
 }
 

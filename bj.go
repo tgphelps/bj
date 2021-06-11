@@ -67,6 +67,16 @@ var cfg Config
 // 3. upcard - the dealer's upcard.
 type StrPoint [3]int8
 
+// These values can appear in the 'key' position of a StrPoint.
+const (
+	spHitHard = iota + 50
+	spHitSoft
+	spSplit
+	spDblHard
+	spDblSoft
+	spSurrender
+)
+
 // strategy is a logical 'set' of StrPoints to with the strategy says
 // 'yes, do it'. This map is built by readStrategyFile, and is
 // consulted during the play of a hand.
@@ -98,13 +108,14 @@ func main() {
 	}
 	err = readConfigFile(configFile)
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
 	err = readStrategyFile(strategyFile)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	// Initialization is complete. Now, play blackjack.
 }
 
 func openTraceFile() {
