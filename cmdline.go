@@ -12,28 +12,28 @@ import (
 // It returns true if all is well, and false if there were
 // errors.
 
-func processCmdLine() error {
+func processCmdLine(params *CmdLineParams) error {
 	var printVersion bool
 	var traceString string
 	var traceList []string
 
-	flag.BoolVar(&verbose, "v", false, "verbose output to stdout")
-	flag.IntVar(&numRounds, "n", 1, "number of rounds to deal")
-	flag.IntVar(&numSeats, "s", 1, "number of table seats in use")
+	flag.BoolVar(&params.verbose, "v", false, "verbose output to stdout")
+	flag.IntVar(&params.numRounds, "n", 1, "number of rounds to deal")
+	flag.IntVar(&params.numSeats, "s", 1, "number of table seats in use")
 	flag.StringVar(&traceString, "t", "", "list of trace flags to set")
-	flag.BoolVar(&repeatable, "r", false, "Same cards dealt every run (for testing")
+	flag.BoolVar(&params.repeatable, "r", false, "Same cards dealt every run (for testing")
 	flag.BoolVar(&printVersion, "version", false, "print version and exit")
 	flag.Parse()
 	if printVersion {
 		fmt.Printf("BJ version: %s\n", version)
 		os.Exit(0)
 	}
-	if verbose {
-		fmt.Printf("verbose = %v\n", verbose)
-		fmt.Printf("repeatable = %v\n", repeatable)
+	if params.verbose {
+		fmt.Printf("verbose = %v\n", params.verbose)
+		fmt.Printf("repeatable = %v\n", params.repeatable)
 		fmt.Printf("trace flags = %s\n", traceString)
-		fmt.Printf("num roungs = %d\n", numRounds)
-		fmt.Printf("num seats = %d\n", numSeats)
+		fmt.Printf("num roungs = %d\n", params.numRounds)
+		fmt.Printf("num seats = %d\n", params.numSeats)
 	}
 	if len(traceString) > 0 {
 		traceList = strings.Split(traceString, ",")
@@ -44,7 +44,7 @@ func processCmdLine() error {
 				return fmt.Errorf("FATAL: bad trace flag: %v", traceList)
 
 			}
-			traceFlags = append(traceFlags, int8(n))
+			params.traceFlags = append(params.traceFlags, int8(n))
 		}
 		// fmt.Printf("trace flags: %v\n", traceFlags)
 	}
@@ -52,8 +52,8 @@ func processCmdLine() error {
 		usage()
 		os.Exit(0)
 	} else {
-		configFile = flag.Arg(0)
-		strategyFile = flag.Arg(1)
+		params.configFile = flag.Arg(0)
+		params.strategyFile = flag.Arg(1)
 	}
 	return nil
 }

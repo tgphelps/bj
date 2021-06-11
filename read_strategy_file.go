@@ -11,7 +11,7 @@ import (
 	"tgphelps.com/trc"
 )
 
-func readStrategyFile(strategyile string) error {
+func readStrategyFile(strategyFile string) error {
 	f, err := os.Open(strategyFile)
 	if err != nil {
 		return fmt.Errorf("FATAL: %s", err)

@@ -38,15 +38,17 @@ const (
 	trInit
 )
 
-// Global variables that never change after being set.
+type CmdLineParams struct {
+	verbose      bool
+	repeatable   bool
+	traceFlags   []int8
+	numRounds    int
+	numSeats     int
+	configFile   string
+	strategyFile string
+}
 
-var verbose bool        // default: false
-var repeatable bool     // default: false
-var traceFlags []int8   // default: empty
-var numRounds int       // default: 1
-var numSeats int        // default: 1
-var configFile string   // mandatory
-var strategyFile string // mandatory
+// var params CmdLineParams
 
 type Config struct {
 	numDecks        int
@@ -90,29 +92,31 @@ var traceName = [...]string{"ALWAYS", "INIT"}
 var trf *os.File
 
 func main() {
-	err := processCmdLine()
+	var params CmdLineParams
+
+	err := processCmdLine(&params)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	if len(traceFlags) > 0 {
+	if len(params.traceFlags) > 0 {
 		openTraceFile()
 		defer closeTraceFile()
 		trc.TraceOpen(trf)
-		for n := range traceFlags {
+		for n := range params.traceFlags {
 			trc.TraceOn(n, traceName[n])
 		}
 		trc.Trace(trAlways, "trace open")
 	}
 	if trc.Tracing(trInit) {
-		traceInitialParams()
+		traceInitialParams(&params)
 	}
-	err = readConfigFile(configFile)
+	err = readConfigFile(params.configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("penetration: %f\n", cfg.penetrationPct)
-	err = readStrategyFile(strategyFile)
+	// fmt.Printf("penetration: %f\n", cfg.penetrationPct)
+	err = readStrategyFile(params.strategyFile)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -133,12 +137,12 @@ func closeTraceFile() {
 	trf.Close()
 }
 
-func traceInitialParams() {
-	trc.Trace(trInit, "verbose: %v", verbose)
-	trc.Trace(trInit, "repeatable: %v", repeatable)
-	trc.Trace(trInit, "traceFlags: %v", traceFlags)
-	trc.Trace(trInit, "numRounds: %d", numRounds)
-	trc.Trace(trInit, "numSeats: %d", numSeats)
-	trc.Trace(trInit, "configFile: %s", configFile)
-	trc.Trace(trInit, "strategyFile: %s", strategyFile)
+func traceInitialParams(params *CmdLineParams) {
+	trc.Trace(trInit, "verbose: %v", params.verbose)
+	trc.Trace(trInit, "repeatable: %v", params.repeatable)
+	trc.Trace(trInit, "traceFlags: %v", params.traceFlags)
+	trc.Trace(trInit, "numRounds: %d", params.numRounds)
+	trc.Trace(trInit, "numSeats: %d", params.numSeats)
+	trc.Trace(trInit, "configFile: %s", params.configFile)
+	trc.Trace(trInit, "strategyFile: %s", params.strategyFile)
 }
