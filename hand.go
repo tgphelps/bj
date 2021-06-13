@@ -67,13 +67,31 @@ func newSplitHand(s *Shoe, betAmount int, firstCard int8) *Hand {
 
 func (h *Hand) String() string {
 	var sb strings.Builder
+
+	sb.WriteString("{")
+	sb.WriteString(strconv.Itoa(int(h.value)))
+	sb.WriteString(" |")
 	for _, s := range h.cards {
 		sb.WriteString(" ")
 		sb.WriteString(strconv.Itoa(int(s)))
 	}
-	sb.WriteString(" total: ")
-	sb.WriteString(strconv.Itoa(int(h.value)))
+	sb.WriteString(" | ")
+	writeFlag(&sb, h.blackjack, "J")
+	writeFlag(&sb, h.busted, "B")
+	writeFlag(&sb, h.doubled, "D")
+	writeFlag(&sb, h.isSplit, "S")
+	writeFlag(&sb, h.obsolete, "O")
+	sb.WriteString("}")
+
 	return sb.String()
+}
+
+func writeFlag(sb *strings.Builder, f bool, c string) {
+	if f {
+		sb.WriteString(c)
+	} else {
+		sb.WriteString(" ")
+	}
 }
 
 // updateValue updates the 'value' field in the hand with total of all cards
