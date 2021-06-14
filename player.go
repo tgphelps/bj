@@ -9,19 +9,19 @@ type Player struct {
 	shoe       *Shoe
 	cfg        *Config
 	strategy   Strategy
-	bet_amount int
+	betAmount  int
 	verbose    bool
 	splitsDone int
 	hands      []*Hand
 }
 
-func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, bet_amount int, verbose bool) *Player {
+func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, betAmount int, verbose bool) *Player {
 	var p Player
 	p.seat = seat
 	p.shoe = shoe
 	p.cfg = cfg
 	p.strategy = strategy
-	p.bet_amount = bet_amount
+	p.betAmount = betAmount
 	p.verbose = verbose
 	return &p
 }
@@ -33,11 +33,11 @@ func (p *Player) logHands() {
 }
 
 func (p *Player) getHand() {
-	panic("not yet")
+	p.hands = append(p.hands, newHand(p.shoe, p.betAmount))
 }
 
-func (p *Player) getSplitHand() {
-	panic("not yet")
+func (p *Player) getSplitHand(firstCard int8) {
+	p.hands = append(p.hands, newSplitHand(p.shoe, p.betAmount, firstCard))
 }
 
 func (p *Player) playHands(upcard int8) {
