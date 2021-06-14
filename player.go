@@ -1,14 +1,18 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Player struct {
-	seat        int
-	shoe        *Shoe
-	cfg         *Config
-	strategy    Strategy
-	bet_amount  int
-	verbose     bool
-	splits_done int
-	hands       []*Hand
+	seat       int
+	shoe       *Shoe
+	cfg        *Config
+	strategy   Strategy
+	bet_amount int
+	verbose    bool
+	splitsDone int
+	hands      []*Hand
 }
 
 func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, bet_amount int, verbose bool) *Player {
@@ -41,27 +45,22 @@ func (p *Player) playHands(upcard int8) {
 }
 
 func (p *Player) endRound() {
-	panic("not yet")
+	p.hands = nil
+	p.splitsDone = 0
 }
 
 func (p *Player) maybeSurrender(h *Hand, upcard int8) bool {
-	if true {
-		panic("not yet")
-	}
+	fmt.Println("XXX fix maybeSurrender")
 	return false
 }
 
 func (p *Player) maybeDouble(h *Hand, upcard int8) bool {
-	if true {
-		panic("not yet")
-	}
+	fmt.Println("XXX fix maybeDouble")
 	return false
 }
 
 func (p *Player) maybeSplit(h *Hand, upcard int8) bool {
-	if true {
-		panic("not yet")
-	}
+	fmt.Println("XXX fix maybeSplit")
 	return false
 }
 
