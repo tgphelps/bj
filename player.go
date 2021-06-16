@@ -41,7 +41,15 @@ func (p *Player) getSplitHand(firstCard int8) {
 }
 
 func (p *Player) playHands(upcard int8) {
-	panic("not yet")
+	for _, h := range p.hands {
+		if !p.maybeSurrender(h, upcard) {
+			if !p.maybeSplit(h, upcard) {
+				if !p.maybeDouble(h, upcard) {
+					p.playNormal(h, upcard)
+				}
+			}
+		}
+	}
 }
 
 func (p *Player) endRound() {
@@ -65,12 +73,33 @@ func (p *Player) maybeSplit(h *Hand, upcard int8) bool {
 }
 
 func (p *Player) playNormal(h *Hand, upcard int8) {
-	panic("not yet")
+	var s StrPoint
+	for {
+		if h.isSoft() {
+			s = StrPoint{keyHitSoft, h.value, upcard}
+			if !p.playStrategy(s, h) {
+				break
+			}
+		} else {
+			s = StrPoint{keyHitHard, h.value, upcard}
+			if !p.playStrategy(s, h) {
+				break
+			}
+		}
+	}
 }
 
 func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
-	if true {
-		panic("not yet")
+	var ret bool
+	if p.strategy[s] {
+		h.hit()
+		if h.busted {
+			ret = false
+		} else {
+			ret = true
+		}
+	} else {
+		ret = false
 	}
-	return false
+	return ret
 }

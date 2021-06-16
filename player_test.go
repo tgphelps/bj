@@ -22,4 +22,5 @@ func TestPlayer(t *testing.T) {
 	fmt.Println("get split hand to a 10")
 	p.getSplitHand(10)
 	fmt.Printf("split hand: %s\n", p.hands[2])
+	p.playHands(10)
 }

@@ -27,6 +27,15 @@ type Config struct {
 // 3. upcard - the dealer's upcard.
 type StrPoint [3]int8
 
+const (
+	keyHitHard = iota + 50
+	keyHitSoft
+	keySplit
+	keyDblHard
+	keyDblSoft
+	keySurrender
+)
+
 type Strategy map[StrPoint]bool
 
 type Session struct {
