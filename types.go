@@ -42,3 +42,13 @@ type Session struct {
 	numPlayers int
 	verbose    bool
 }
+
+type Statistics struct {
+	roundsPlayed  int
+	handsPlayed   int
+	blackjacksWon int
+	totalBet      int
+	totalWon      int
+	totalLost     int
+	totalPush     int
+}
