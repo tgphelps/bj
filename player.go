@@ -21,6 +21,7 @@ type Player struct {
 // newPlayer creates a new Player
 func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, betAmount int, verbose bool) *Player {
 	var p Player
+	// fmt.Println("in newPlayer")
 	p.seat = seat
 	p.shoe = shoe
 	p.cfg = cfg

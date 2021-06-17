@@ -1,9 +1,10 @@
 package main
 
-// "fmt"
+import "fmt"
 
 type Game struct {
 	verbose      bool
+	dealer       *Dealer
 	numPlayers   int
 	players      []*Player
 	strategy     Strategy
@@ -27,7 +28,12 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 		g.shoe.randomize()
 	}
 	g.shoe.shuffle()
-	g.players = nil
-	// XXX more to do
+	g.dealer = newDealer(g.shoe, g.hitS17)
+	for i := 0; i < numPlayers; i++ {
+		// fmt.Printf("create new player...\n")
+		p := newPlayer(i+1, g.shoe, g.cfg, g.strategy, betAmount, g.verbose)
+		g.players = append(g.players, p)
+		fmt.Printf("player: %v\n", p)
+	}
 	return &g
 }

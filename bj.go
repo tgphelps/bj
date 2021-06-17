@@ -38,6 +38,9 @@ const (
 	trInit
 )
 
+// This should be even, so blackjack payoff is an integer.
+const betAmount = 2
+
 // These values can appear in the 'key' position of a StrPoint.
 const (
 	spHitHard = iota + 50
