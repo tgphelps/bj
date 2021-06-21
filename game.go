@@ -37,3 +37,15 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 	}
 	return &g
 }
+
+func (g *Game) playRound() {
+	fmt.Println("Playing round...")
+}
+
+func (g *Game) updateStats() {
+	fmt.Println("Updating stats...")
+}
+
+func (g *Game) writeStats() {
+
+}

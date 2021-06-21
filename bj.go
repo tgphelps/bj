@@ -105,7 +105,11 @@ func main() {
 	// Initialization is complete. Now, play blackjack.
 	// XXX think about penetrationPct
 	game := newGame(strategy, params.numSeats, int(cfg.penetrationPct), params.repeatable, &cfg, params.verbose)
-	fmt.Println(game)
+	// fmt.Println(game)
+	for i := 0; i < params.numRounds; i++ {
+		game.playRound()
+	}
+	game.writeStats()
 }
 
 func openTraceFile() *os.File {
