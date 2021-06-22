@@ -89,9 +89,9 @@ func (h *Hand) String() string {
 func writeFlag(sb *strings.Builder, f bool, c string) {
 	if f {
 		sb.WriteString(c)
-	} else {
-		sb.WriteString(" ")
-	}
+	} // else {
+	// sb.WriteString(" ")
+	// }
 }
 
 // updateValue updates the 'value' field in the hand with total of all cards

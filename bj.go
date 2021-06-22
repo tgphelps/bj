@@ -31,6 +31,7 @@ import (
 
 const version = "0.0.1"
 const traceFileName = "TRACE.txt"
+const statsFileName = "STATS.txt"
 
 // Trace points for calls to the trc package.
 const (
@@ -98,18 +99,18 @@ func main() {
 		return
 	}
 	// XXX testing
-	fmt.Println("strategy:")
-	for k, v := range strategy {
-		fmt.Printf("strat: %v %v\n", k, v)
-	}
+	// fmt.Println("strategy:")
+	// for k, v := range strategy {
+	// fmt.Printf("strat: %v %v\n", k, v)
+	// }
 	// Initialization is complete. Now, play blackjack.
 	// XXX think about penetrationPct
-	game := newGame(strategy, params.numSeats, int(cfg.penetrationPct), params.repeatable, &cfg, params.verbose)
+	game := newGame(strategy, params.numSeats, cfg.penetrationPct, params.repeatable, &cfg, params.verbose)
 	// fmt.Println(game)
 	for i := 0; i < params.numRounds; i++ {
 		game.playRound()
 	}
-	game.writeStats()
+	game.writeStats(statsFileName, params.strategyFile)
 }
 
 func openTraceFile() *os.File {

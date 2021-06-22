@@ -73,7 +73,7 @@ func setConfigVar(tag string, val string, cfg *Config) {
 		case "canSurrender":
 			cfg.canSurrender = toBool(n)
 		case "penetrationPct":
-			cfg.penetrationPct = float32(n) / 100
+			cfg.penetrationPct = n
 		default:
 			trc.TraceIf(trAlways, "BAD onfig line")
 		}

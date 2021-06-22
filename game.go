@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+	"time"
+)
 
 type Game struct {
 	verbose      bool
@@ -33,10 +38,15 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 		// fmt.Printf("create new player...\n")
 		p := newPlayer(i+1, g.shoe, g.cfg, g.strategy, betAmount, g.verbose)
 		g.players = append(g.players, p)
-		fmt.Printf("player: %v\n", p)
+		// fmt.Printf("player: %v\n", p)
 	}
 	return &g
 }
+
+// Deal hands to each player and the dealer.
+// If the dealer has a BJ, settle all hands now.
+// Otherwise, play each player hand, and then the dealer hand.
+// Collect data on win/loss/push.
 
 func (g *Game) playRound() {
 	fmt.Println("Playing round...")
@@ -46,6 +56,12 @@ func (g *Game) updateStats() {
 	fmt.Println("Updating stats...")
 }
 
-func (g *Game) writeStats() {
-
+func (g *Game) writeStats(fileName string, strategyName string) {
+	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal("FATAL: ", err)
+	}
+	defer f.Close()
+	now := time.Now()
+	fmt.Fprintln(f, "time", now.Format("2006-01-02 15:04:05"))
 }

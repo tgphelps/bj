@@ -18,7 +18,7 @@ type Config struct {
 	maxSplitAces    int
 	canHitSplitAces bool
 	canSurrender    bool
-	penetrationPct  float32
+	penetrationPct  int
 }
 
 // A StrPoint represents a decision to be made. It consists of 3 numbers:
