@@ -30,7 +30,13 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 	g.hitS17 = cfg.hitS17
 	g.shoe = newShoe(cfg.numDecks)
 	if !repeatable {
+		if verbose {
+			fmt.Println("randomize")
+		}
 		g.shoe.randomize()
+	}
+	if verbose {
+		fmt.Println("shuffle")
 	}
 	g.shoe.shuffle()
 	g.dealer = newDealer(g.shoe, g.hitS17)
@@ -49,19 +55,36 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 // Collect data on win/loss/push.
 
 func (g *Game) playRound() {
-	fmt.Println("Playing round...")
+	fmt.Println("XXX Playing round...")
 }
 
 func (g *Game) updateStats() {
-	fmt.Println("Updating stats...")
+	fmt.Println("XXX Updating stats...")
 }
 
 func (g *Game) writeStats(fileName string, strategyName string) {
+	var gain float32
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatal("FATAL: ", err)
 	}
 	defer f.Close()
+	// XXX The following assumes a blackjack pays 3:2
+	if g.st.totalWon+g.st.totalLost+g.st.totalPush-g.st.blackjacksWon != g.st.totalBet {
+		fmt.Fprintln(f, "ERROR")
+	}
 	now := time.Now()
 	fmt.Fprintln(f, "time", now.Format("2006-01-02 15:04:05"))
+	fmt.Fprintf(f, "strategy %s\n", strategyName)
+	fmt.Fprintf(f, "roundsPlayed %d\n", g.st.roundsPlayed)
+	fmt.Fprintf(f, "handsPlayed %d\n", g.st.handsPlayed)
+	fmt.Fprintf(f, "totalBet %d\n", g.st.totalBet)
+	fmt.Fprintf(f, "totalWon %d\n", g.st.totalWon)
+	fmt.Fprintf(f, "totalLost %d\n", g.st.totalLost)
+	fmt.Fprintf(f, "totalPush %d\n", g.st.totalPush)
+	fmt.Fprintf(f, "blackjacksWon %d\n", g.st.blackjacksWon)
+	if g.st.totalBet > 0 {
+		gain = float32(100 * (g.st.totalWon - g.st.totalLost) / g.st.totalBet)
+		fmt.Fprintf(f, "%win = %f5.4\n", gain)
+	}
 }
