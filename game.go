@@ -29,6 +29,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 	g.shufflePoint = cfg.numDecks * 52 * penetration / 100
 	g.hitS17 = cfg.hitS17
 	g.shoe = newShoe(cfg.numDecks)
+	g.numPlayers = numPlayers
 	if !repeatable {
 		if verbose {
 			fmt.Println("randomize")
@@ -36,7 +37,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 		g.shoe.randomize()
 	}
 	if verbose {
-		fmt.Println("shuffle")
+		fmt.Println("initial shuffle")
 	}
 	g.shoe.shuffle()
 	g.dealer = newDealer(g.shoe, g.hitS17)
@@ -44,7 +45,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 		// fmt.Printf("create new player...\n")
 		p := newPlayer(i+1, g.shoe, g.cfg, g.strategy, betAmount, g.verbose)
 		g.players = append(g.players, p)
-		// fmt.Printf("player: %v\n", p)
+		// fmt.Printf("XXX player: %v\n", p)
 	}
 	return &g
 }
@@ -56,6 +57,33 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 
 func (g *Game) playRound() {
 	fmt.Println("XXX Playing round...")
+	if g.shoe.remaining < g.shufflePoint {
+		if g.verbose {
+			fmt.Println("shuffle")
+		}
+		g.shoe.shuffle()
+	}
+	for _, p := range g.players {
+		p.getHand()
+		if g.verbose {
+			fmt.Printf("P%d hand: %s\n", p.seat, p.hands[0])
+		}
+		if p.hands[0].blackjack && g.verbose {
+			fmt.Printf("P%d blackjack\n", p.seat)
+		}
+	}
+	g.dealer.getHand()
+	if g.verbose {
+		fmt.Printf("dealer hand: %s\n", g.dealer.hand)
+	}
+	// if no dealer BJ, play player hands. Then play delaer hand.
+	g.updateStats()
+	if g.verbose {
+		fmt.Println("clear player hands")
+	}
+	for _, p := range g.players {
+		p.endRound()
+	}
 }
 
 func (g *Game) updateStats() {
@@ -85,6 +113,6 @@ func (g *Game) writeStats(fileName string, strategyName string) {
 	fmt.Fprintf(f, "blackjacksWon %d\n", g.st.blackjacksWon)
 	if g.st.totalBet > 0 {
 		gain = float32(100 * (g.st.totalWon - g.st.totalLost) / g.st.totalBet)
-		fmt.Fprintf(f, "%win = %f5.4\n", gain)
+		fmt.Fprintf(f, "pct win = %f5.4\n", gain)
 	}
 }

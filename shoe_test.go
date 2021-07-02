@@ -14,7 +14,7 @@ func TestShoe1(t *testing.T) {
 	s.shuffle()
 	// fmt.Println(s.cards) // just to look
 
-	if s.remaining() != 2*52 {
+	if s.remaining != 2*52 {
 		t.Error("Bad remaining() 1")
 	}
 
@@ -27,7 +27,7 @@ func TestShoe1(t *testing.T) {
 	c = s.deal()
 	fmt.Printf("deal: %d\n", c)
 
-	if s.remaining() != 2*52-4 {
+	if s.remaining != 2*52-4 {
 		t.Error("Bad remaining() 2")
 	}
 
@@ -36,7 +36,7 @@ func TestShoe1(t *testing.T) {
 		c = s.deal()
 	}
 
-	if s.remaining() != 0 {
+	if s.remaining != 0 {
 		t.Error("Bad remaining() 3")
 	}
 

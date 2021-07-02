@@ -38,11 +38,12 @@ func init() {
 
 type Shoe struct {
 	// numDecks    int
-	cards      []int8
-	shoeSize   int
-	next       int
-	repeatable bool
-	// thisRound []int
+	cards     []int8
+	shoeSize  int
+	next      int
+	remaining int
+	//repeatable bool
+	// thisRou nd []int
 	// trackRounds bool
 }
 
@@ -54,6 +55,7 @@ func newShoe(decks int) *Shoe {
 	// s.numDecks = decks
 	s.next = 0
 	s.shoeSize = 52 * decks
+	s.remaining = s.shoeSize
 	for i := 0; i < decks; i++ {
 		for _, j := range deck {
 			s.cards = append(s.cards, j)
@@ -79,9 +81,9 @@ func (s *Shoe) shuffle() {
 
 // remaining returns the number of cards still in the shoe.
 
-func (s *Shoe) remaining() int {
-	return s.shoeSize - s.next
-}
+// func (s *Shoe) remaining() int {
+// return s.shoeSize - s.next
+// }
 
 // deal returns the next card from the shoe. No check is made for an empty shoe.
 // The call is responsible for not allowing this to happen.
@@ -89,6 +91,7 @@ func (s *Shoe) remaining() int {
 func (s *Shoe) deal() int8 {
 	c := s.cards[s.next]
 	s.next += 1
+	s.remaining -= 1
 	return c
 }
 

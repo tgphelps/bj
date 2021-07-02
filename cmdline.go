@@ -32,7 +32,7 @@ func processCmdLine(params *CmdLineParams) error {
 		fmt.Printf("verbose = %v\n", params.verbose)
 		fmt.Printf("repeatable = %v\n", params.repeatable)
 		fmt.Printf("trace flags = %s\n", traceString)
-		fmt.Printf("num roungs = %d\n", params.numRounds)
+		fmt.Printf("num rounds = %d\n", params.numRounds)
 		fmt.Printf("num seats = %d\n", params.numSeats)
 	}
 	if len(traceString) > 0 {
