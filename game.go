@@ -76,7 +76,16 @@ func (g *Game) playRound() {
 	if g.verbose {
 		fmt.Printf("dealer hand: %s\n", g.dealer.hand)
 	}
-	// if no dealer BJ, play player hands. Then play delaer hand.
+	if g.dealer.hand.blackjack {
+		if g.verbose {
+			fmt.Println("dealer BLACKJACK")
+		}
+	} else {
+		for _, p := range g.players {
+			fmt.Printf("Play seat %d:\n", p.seat)
+			p.playHands(g.dealer.upCard())
+		}
+	}
 	g.updateStats()
 	if g.verbose {
 		fmt.Println("clear player hands")

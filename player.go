@@ -55,6 +55,9 @@ func (p *Player) playHands(upcard int8) {
 			if !p.maybeSplit(h, upcard) {
 				if !p.maybeDouble(h, upcard) {
 					p.playNormal(h, upcard)
+					if p.verbose {
+						fmt.Printf("Seat %d final hand: %s\n", p.seat, h)
+					}
 				}
 			}
 		}
@@ -113,6 +116,9 @@ func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
 	var ret bool
 	if p.strategy[s] {
 		h.hit()
+		if p.verbose {
+			fmt.Printf("HIT. Hand: %s\n", h)
+		}
 		if h.busted {
 			ret = false
 		} else {
