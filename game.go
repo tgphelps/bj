@@ -96,11 +96,90 @@ func (g *Game) playRound() {
 }
 
 func (g *Game) updateStats() {
-	fmt.Println("XXX Updating stats...")
+	dlrVal := g.dealer.hand.value
+	dlrBj := g.dealer.hand.blackjack
+	dlrBust := g.dealer.hand.busted
+	if g.verbose {
+		fmt.Println("----------RESULTS")
+		fmt.Printf("   Dealer has %d\n", dlrVal)
+	}
+	for _, p := range g.players {
+		for n, h := range p.hands {
+			// n = hand number, h = hand struct
+			if g.verbose {
+				fmt.Printf("   P%d hand %d: %d\n", p.seat, n+1, h.value)
+
+			}
+			if h.obsolete {
+				if g.verbose {
+					fmt.Println("   OBSOLETE")
+				}
+				continue
+			}
+			// Hand is not obsolete
+			g.st.totalBet += h.betAmount
+			if h.blackjack && !dlrBj {
+				g.st.blackjacksWon += 1
+				win := (3 * h.betAmount / 2)
+				g.st.totalWon += win
+				if g.verbose {
+					fmt.Printf("   WIN %d: BJ\n", win)
+				}
+
+				continue
+			}
+			// This hand did not win with a blackjack
+			if dlrBj {
+				if h.blackjack {
+					g.st.totalPush += h.betAmount
+					if g.verbose {
+						fmt.Println("   PUSH: blackjacks")
+					}
+				} else {
+					g.st.totalLost += h.betAmount
+					if g.verbose {
+						fmt.Printf("LOSE %d: dealer BJ: %d\n", h.betAmount)
+					}
+				}
+			} else {
+				// Nobody had a blackjack
+				if h.busted {
+					g.st.totalLost += h.betAmount
+					if g.verbose {
+						fmt.Printf("   LOSE %d: bust\n", h.betAmount)
+					}
+				} else if dlrBust {
+					g.st.totalWon += h.betAmount
+					if g.verbose {
+						fmt.Printf("   WIN %d: dealer bust\n", h.betAmount)
+					}
+				} else if dlrVal > h.value {
+					g.st.totalLost += h.betAmount
+					if g.verbose {
+						fmt.Printf("   LOSE %d\n", h.betAmount)
+					}
+				} else if h.value > dlrVal {
+					g.st.totalWon += h.betAmount
+					if g.verbose {
+						fmt.Printf("   WIN %d\n", h.betAmount)
+					}
+				} else {
+					g.st.totalPush += h.betAmount
+					if g.verbose {
+						fmt.Println("   PUSH")
+					}
+				}
+			}
+		}
+	}
+	if g.verbose {
+		fmt.Println("----------END")
+	}
 }
 
 func (g *Game) writeStats(fileName string, strategyName string) {
 	var gain float32
+	// XXX Stats file must already exist
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatal("FATAL: ", err)

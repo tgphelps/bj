@@ -56,7 +56,7 @@ func (p *Player) playHands(upcard int8) {
 				if !p.maybeDouble(h, upcard) {
 					p.playNormal(h, upcard)
 					if p.verbose {
-						fmt.Printf("Seat %d final hand: %s\n", p.seat, h)
+						fmt.Printf("P%d final hand: %s\n", p.seat, h)
 					}
 				}
 			}
