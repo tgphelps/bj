@@ -40,7 +40,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 		fmt.Println("initial shuffle")
 	}
 	g.shoe.shuffle()
-	g.dealer = newDealer(g.shoe, g.hitS17)
+	g.dealer = newDealer(g.shoe, g.hitS17, g.verbose)
 	for i := 0; i < numPlayers; i++ {
 		// fmt.Printf("create new player...\n")
 		p := newPlayer(i+1, g.shoe, g.cfg, g.strategy, betAmount, g.verbose)
@@ -65,6 +65,7 @@ func (g *Game) playRound() {
 	}
 	for _, p := range g.players {
 		p.getHand()
+		g.st.handsPlayed += 1
 		if g.verbose {
 			fmt.Printf("P%d hand: %s\n", p.seat, p.hands[0])
 		}
@@ -85,6 +86,7 @@ func (g *Game) playRound() {
 			fmt.Printf("Play seat %d:\n", p.seat)
 			p.playHands(g.dealer.upCard())
 		}
+		g.dealer.playHand()
 	}
 	g.updateStats()
 	if g.verbose {
@@ -93,6 +95,7 @@ func (g *Game) playRound() {
 	for _, p := range g.players {
 		p.endRound()
 	}
+	g.st.roundsPlayed += 1
 }
 
 func (g *Game) updateStats() {
@@ -201,6 +204,6 @@ func (g *Game) writeStats(fileName string, strategyName string) {
 	fmt.Fprintf(f, "blackjacksWon %d\n", g.st.blackjacksWon)
 	if g.st.totalBet > 0 {
 		gain = float32(100 * (g.st.totalWon - g.st.totalLost) / g.st.totalBet)
-		fmt.Fprintf(f, "pct win = %f5.4\n", gain)
+		fmt.Fprintf(f, "pct win = %f\n", gain)
 	}
 }

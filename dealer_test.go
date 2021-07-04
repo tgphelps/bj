@@ -10,7 +10,7 @@ func TestDealer(t *testing.T) {
 	s := newShoe(2)
 	// s.randomize()
 	s.shuffle()
-	d := newDealer(s, true) // hit soft 17
+	d := newDealer(s, true, false) // hit soft 17
 	for i := 1; i <= 20; i++ {
 		d.getHand()
 		fmt.Printf("Initial hand: %s\n", d.hand)
