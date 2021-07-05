@@ -56,7 +56,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 // Collect data on win/loss/push.
 
 func (g *Game) playRound() {
-	fmt.Println("XXX Playing round...")
+	//fmt.Println("XXX Playing round...")
 	if g.shoe.remaining < g.shufflePoint {
 		if g.verbose {
 			fmt.Println("shuffle")
@@ -83,7 +83,9 @@ func (g *Game) playRound() {
 		}
 	} else {
 		for _, p := range g.players {
-			fmt.Printf("Play seat %d:\n", p.seat)
+			if g.verbose {
+				fmt.Printf("Play seat %d:\n", p.seat)
+			}
 			p.playHands(g.dealer.upCard())
 		}
 		g.dealer.playHand()
@@ -203,7 +205,7 @@ func (g *Game) writeStats(fileName string, strategyName string) {
 	fmt.Fprintf(f, "totalPush %d\n", g.st.totalPush)
 	fmt.Fprintf(f, "blackjacksWon %d\n", g.st.blackjacksWon)
 	if g.st.totalBet > 0 {
-		gain = float32(100 * (g.st.totalWon - g.st.totalLost) / g.st.totalBet)
-		fmt.Fprintf(f, "pct win = %f\n", gain)
+		gain = float32(100*(g.st.totalWon-g.st.totalLost)) / float32(g.st.totalBet)
+		fmt.Fprintf(f, "pct win = %6.4f\n", gain)
 	}
 }

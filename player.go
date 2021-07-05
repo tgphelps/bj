@@ -80,14 +80,14 @@ func (p *Player) maybeSurrender(h *Hand, upcard int8) bool {
 // maybeDouble will double a hand, if the strategy says to do so. If it
 // does double, it returns true, else false.
 func (p *Player) maybeDouble(h *Hand, upcard int8) bool {
-	fmt.Println("XXX fix maybeDouble")
+	// fmt.Println("XXX fix maybeDouble")
 	return false
 }
 
 // maybeSplit will split a pair, if the strategy says to do so. If it
 // does split, it returns true, else false.
 func (p *Player) maybeSplit(h *Hand, upcard int8) bool {
-	fmt.Println("XXX fix maybeSplit")
+	// fmt.Println("XXX fix maybeSplit")
 	return false
 }
 

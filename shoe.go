@@ -77,6 +77,7 @@ func (s *Shoe) randomize() {
 func (s *Shoe) shuffle() {
 	curShoe = s
 	rand.Shuffle(s.shoeSize, swap)
+	s.next = 0
 }
 
 // remaining returns the number of cards still in the shoe.
