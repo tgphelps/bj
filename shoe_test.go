@@ -33,7 +33,7 @@ func TestShoe1(t *testing.T) {
 
 	// Deal all the cards in the shoe.
 	for i := 0; i < 100; i++ {
-		c = s.deal()
+		_ = s.deal()
 	}
 
 	if s.remaining != 0 {

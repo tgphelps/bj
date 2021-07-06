@@ -43,14 +43,14 @@ const (
 const betAmount = 2
 
 // These values can appear in the 'key' position of a StrPoint.
-const (
-	spHitHard = iota + 50
-	spHitSoft
-	spSplit
-	spDblHard
-	spDblSoft
-	spSurrender
-)
+//const (
+//	spHitHard = iota + 50
+//	spHitSoft
+//	spSplit
+//	spDblHard
+//	spDblSoft
+//	spSurrender
+//)
 
 // strategy is a logical 'set' of StrPoints to with the strategy says
 // 'yes, do it'. This map is built by readStrategyFile, and is

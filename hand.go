@@ -12,7 +12,7 @@ type Hand struct {
 	doubled   bool
 	busted    bool
 	isSplit   bool
-	no_hit    bool
+	noHit     bool
 	noDouble  bool
 	obsolete  bool
 	shoe      *Shoe

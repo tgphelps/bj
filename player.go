@@ -33,9 +33,9 @@ func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, betAmount i
 
 // Player methods
 
-func (p *Player) logHands() {
-	panic("not yet")
-}
+//func (p *Player) logHands() {
+//	panic("not yet")
+//}
 
 // getHand gets one new 2-card hand
 func (p *Player) getHand() {
@@ -44,7 +44,14 @@ func (p *Player) getHand() {
 
 // getSplitHand get one new card to go with one of a split pair
 func (p *Player) getSplitHand(firstCard int8) {
-	p.hands = append(p.hands, newSplitHand(p.shoe, p.betAmount, firstCard))
+	h := newSplitHand(p.shoe, p.betAmount, firstCard)
+	if firstCard == 11 && !p.cfg.canHitSplitAces {
+		h.noHit = true
+	}
+	if !p.cfg.dasAllowed {
+		h.noDouble = true
+	}
+	p.hands = append(p.hands, h)
 }
 
 // playHands plays all the hands that a player has. During the play, more

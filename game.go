@@ -56,7 +56,7 @@ func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool
 // Collect data on win/loss/push.
 
 func (g *Game) playRound() {
-	//fmt.Println("XXX Playing round...")
+	//078fmt.Println("XXX Playing round...")
 	if g.shoe.remaining < g.shufflePoint {
 		if g.verbose {
 			fmt.Println("shuffle")
@@ -104,6 +104,7 @@ func (g *Game) updateStats() {
 	dlrVal := g.dealer.hand.value
 	dlrBj := g.dealer.hand.blackjack
 	dlrBust := g.dealer.hand.busted
+
 	if g.verbose {
 		fmt.Println("----------RESULTS")
 		fmt.Printf("   Dealer has %d\n", dlrVal)
@@ -113,7 +114,6 @@ func (g *Game) updateStats() {
 			// n = hand number, h = hand struct
 			if g.verbose {
 				fmt.Printf("   P%d hand %d: %d\n", p.seat, n+1, h.value)
-
 			}
 			if h.obsolete {
 				if g.verbose {
@@ -143,7 +143,7 @@ func (g *Game) updateStats() {
 				} else {
 					g.st.totalLost += h.betAmount
 					if g.verbose {
-						fmt.Printf("LOSE %d: dealer BJ: %d\n", h.betAmount)
+						fmt.Printf("LOSE %d: dealer BJ\n", h.betAmount)
 					}
 				}
 			} else {
@@ -184,15 +184,15 @@ func (g *Game) updateStats() {
 
 func (g *Game) writeStats(fileName string, strategyName string) {
 	var gain float32
-	// XXX Stats file must already exist
-	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND, 0644)
+
+	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatal("FATAL: ", err)
 	}
 	defer f.Close()
 	// XXX The following assumes a blackjack pays 3:2
 	if g.st.totalWon+g.st.totalLost+g.st.totalPush-g.st.blackjacksWon != g.st.totalBet {
-		fmt.Fprintln(f, "ERROR")
+		fmt.Fprintln(f, "ERROR: stats don't match")
 	}
 	now := time.Now()
 	fmt.Fprintln(f, "time", now.Format("2006-01-02 15:04:05"))

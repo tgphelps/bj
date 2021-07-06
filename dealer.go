@@ -11,7 +11,7 @@ type Dealer struct {
 	shoe    *Shoe
 	hit_s17 bool
 	hand    *Hand
-	value   int8
+	//value   int8
 	verbose bool
 }
 

@@ -36,12 +36,12 @@ const (
 	keySurrender
 )
 
-type Strategy map[StrPoint]bool
+//type Strategy map[StrPoint]bool
 
-type Session struct {
-	numPlayers int
-	verbose    bool
-}
+//type Session struct {
+//numPlayers int
+//verbose    bool
+//}
 
 type Statistics struct {
 	roundsPlayed  int
