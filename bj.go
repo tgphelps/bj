@@ -108,6 +108,9 @@ func main() {
 	game := newGame(strategy, params.numSeats, cfg.penetrationPct, params.repeatable, &cfg, params.verbose)
 	// fmt.Println(game)
 	for i := 0; i < params.numRounds; i++ {
+		if params.verbose {
+			fmt.Printf("ROUND %d\n", i+1)
+		}
 		game.playRound()
 	}
 	game.writeStats(statsFileName, params.strategyFile)

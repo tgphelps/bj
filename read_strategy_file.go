@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"tgphelps.com/trc"
 )
 
 func readStrategyFile(strategyFile string, strategy Strategy) error {
-	var s StrPoint
+	//var s StrPoint
 	f, err := os.Open(strategyFile)
 	if err != nil {
 		return fmt.Errorf("FATAL: %s", err)
@@ -31,22 +32,34 @@ func readStrategyFile(strategyFile string, strategy Strategy) error {
 				return fmt.Errorf("error on strategy file: %s", err)
 			}
 		} else {
+			var a []string
 			// handle the strategy line here
 			if !strings.HasPrefix(s, "#") {
-				a := strings.Fields(s)
-				if len(a) > 0 {
-					// XXX
-					panic("Strategy file not implemented")
+				a = strings.Fields(s)
+				if len(a) == 0 {
+					continue
+				}
+				if a[0] == "hit" {
+					//fmt.Print(s)
+					if a[1] == "hard" {
+						do_strategy_hit(strategy, keyHitHard, a)
+					} else if a[1] == "soft" {
+						do_strategy_hit(strategy, keyHitSoft, a)
+					} else {
+						panic("invalid strategy line")
+					}
+				} else {
+					panic("illegal strategy line")
 				}
 			}
 		}
 	}
 	// XXX testing
-	s[0] = 1
-	s[1] = 2
-	s[2] = 3
-	strategy[s] = true
-	trc.TraceIf(trInit, "end strategy file")
+	//s[0] = 1
+	//s[1] = 2
+	//s[2] = 3
+	//strategy[s] = true
+	//trc.TraceIf(trInit, "end strategy file")
 	// XXX
 
 	return nil
@@ -64,3 +77,18 @@ func NewStrPoint(key int8, val int8, upcard int8) StrPoint {
 // s := NewStrPoint(key, val, upcard)
 // return strategy[s]
 // }
+
+func do_strategy_hit(s Strategy, key int8, a []string) {
+	vals := strings.Split(a[2], ",")
+	upcards := strings.Split(a[4], ",")
+	for _, val := range vals {
+		for _, upcard := range upcards {
+			//fmt.Printf("val: %s upcard: %s\n", val, upcard)
+			intVal, _ := strconv.Atoi(val)
+			intUp, _ := strconv.Atoi(upcard)
+			strp := NewStrPoint(key, int8(intVal), int8(intUp))
+			//fmt.Println(strp)
+			s[strp] = true
+		}
+	}
+}
