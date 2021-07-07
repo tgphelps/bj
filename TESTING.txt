@@ -1,0 +1,6 @@
+
+Compare never-hit strategy between Python and Go versions:
+
+30 million hands with Python version show 15.7% loss.
+40 million hands with Go version show the same 15.7% loss. (Maybe more
+variation between 10M-hand runs, though.)

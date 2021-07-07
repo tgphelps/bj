@@ -36,7 +36,7 @@ const (
 	keySurrender
 )
 
-//type Strategy map[StrPoint]bool
+type Strategy map[StrPoint]bool
 
 //type Session struct {
 //numPlayers int
