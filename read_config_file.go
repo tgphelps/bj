@@ -21,6 +21,7 @@ func readConfigFile(cfgFile string, cfg *Config) error {
 	}
 	defer f.Close()
 	r := bufio.NewReader(f)
+	paramsSet := 0
 	for {
 		var s string
 		s, err := r.ReadString('\n')
@@ -38,12 +39,16 @@ func readConfigFile(cfgFile string, cfg *Config) error {
 				}
 				if len(a) == 3 && a[1] == "=" {
 					setConfigVar(a[0], a[2], cfg)
+					paramsSet += 1
 				} else {
 					// trc.TraceIf(trAlways, "bad config: %v", a)
 					return fmt.Errorf("FATAL: bad config: %v", a)
 				}
 			}
 		}
+	}
+	if paramsSet != numConfigParams {
+		log.Panic("Not all config parameters got set.")
 	}
 	return nil
 }
@@ -71,7 +76,7 @@ func setConfigVar(tag string, val string, cfg *Config) {
 		case "penetrationPct":
 			cfg.penetrationPct = n
 		default:
-			panic("BAD onfig line")
+			panic("BAD config line")
 		}
 	}
 }

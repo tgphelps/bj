@@ -33,10 +33,12 @@ func readStrategyFile(strategyFile string, strategy Strategy) error {
 			var a []string
 			// handle the strategy line here
 			if !strings.HasPrefix(s, "#") {
+				// This is NOT a comment
 				a = strings.Fields(s)
 				if len(a) == 0 {
 					continue
 				}
+				// The line is not blank. It should be a real strategy line.
 				switch a[0] {
 				case "hit":
 					switch a[1] {
@@ -53,15 +55,6 @@ func readStrategyFile(strategyFile string, strategy Strategy) error {
 			}
 		}
 	}
-
-	// XXX testing
-	//s[0] = 1
-	//s[1] = 2
-	//s[2] = 3
-	//strategy[s] = true
-	//trc.TraceIf(trInit, "end strategy file")
-	// XXX
-
 	return nil
 }
 
@@ -72,11 +65,6 @@ func NewStrPoint(key int8, val int8, upcard int8) StrPoint {
 	s[2] = upcard
 	return s
 }
-
-// func inStrategyMap(key int8, val int8, upcard int8) bool {
-// s := NewStrPoint(key, val, upcard)
-// return strategy[s]
-// }
 
 func do_strategy_hit(s Strategy, key int8, a []string) {
 	vals := strings.Split(a[2], ",")
