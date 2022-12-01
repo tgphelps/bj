@@ -64,3 +64,10 @@ package main
 // split <nums3> vs <nums2>
 //   example: split 2,3 vs 2,3,4,5,6,7 # split 2's and 3's versus 2 through 7
 // surrender <nums1> vs <nums2>
+
+// The strategy file is used to build a strategy map which tells what to do
+// in every situation. The map has keys which are tuples of
+// (decision, player-hand, dealer-upcard)
+// and values which are booleans. The decision field is one of the 6 decision
+// types from the strategy file. If a key is not in the map, it is assumed to
+// be false.
