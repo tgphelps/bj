@@ -8,18 +8,18 @@ import (
 )
 
 type Hand struct {
-	blackjack bool
-	doubled   bool
-	busted    bool
-	isSplit   bool
-	noHit     bool
-	noDouble  bool
-	obsolete  bool
-	shoe      *Shoe
-	betAmount int
-	value     int8
-	bigAces   int
-	cards     []int8
+	blackjack bool // This hand is a blacjack
+	doubled   bool // This hand has been doubled
+	busted    bool // This hand has busted
+	isSplit   bool // This hand is a split hand
+	// noHit     bool
+	// noDouble  bool
+	obsolete  bool   // This hand is obsolete, and should be ignored
+	shoe      *Shoe  // Shoe used to deal cards to this hand
+	betAmount int    // Amount that has beeen bet on this hand
+	value     int8   // Total point count in this hand
+	bigAces   int    // Number of aces being counted as 11 in this hand
+	cards     []int8 // Cards that make up this hand
 }
 
 const ace = 11
@@ -189,7 +189,7 @@ func findCard(card int8, hand []int8) int {
 	return 0 // not reached
 }
 
-// utility function to count the number of a given card in the hand.
+// utility function to count the number of a given card value in the hand.
 
 func countCard(card int8, hand []int8) int {
 	count := 0
