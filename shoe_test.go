@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+// NOTE: After a non-randomized shuffle, the first cards dealt are: 10, 7, 6
 func TestShoeBasic(t *testing.T) {
 	s := newShoe(2)
 	if s.shoeSize != 104 {
@@ -69,5 +70,27 @@ func TestShoeShuffle(t *testing.T) {
 	// fmt.Printf("after shuffle: %d %d %d\n", c1, c2, c3)
 	if c1 != 10 || c2 != 7 || c3 != 6 {
 		t.Errorf("after shuffle, no 10,7,6, but %d,%d,%d", c1, c2, c3)
+	}
+}
+
+func TestShoeForcing(t *testing.T) {
+	s := newShoe(1)
+	s.shuffle()
+	c1 := s.deal()
+	s.force([]int8{1, 2})
+	c2 := s.deal()
+	c3 := s.deal()
+	c4 := s.deal()
+	if c1 != 10 || c2 != 1 || c3 != 2 || c4 != 7 {
+		t.Errorf("forced cards 1 and 2 between 10 and 7, but got %d, %d, %d, %d", c1, c2, c3, c4)
+	}
+	s = newShoe(1)
+	s.shuffle()
+	c1 = s.deal()
+	s.force1((9))
+	c2 = s.deal()
+	c3 = s.deal()
+	if c1 != 10 || c2 != 9 || c3 != 7 {
+		t.Errorf("forced card 9 between 10 and 7, but got %d, %d, %d", c1, c2, c3)
 	}
 }
