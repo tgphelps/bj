@@ -94,3 +94,18 @@ func TestShoeForcing(t *testing.T) {
 		t.Errorf("forced card 9 between 10 and 7, but got %d, %d, %d", c1, c2, c3)
 	}
 }
+
+// Crude test of randomize
+
+func TestRandomize(t *testing.T) {
+	s := newShoe((1))
+	s.randomize()
+	s.shuffle()
+	c1 := s.cards[0]
+	c2 := s.cards[1]
+	if c1 == 10 && c2 == 7 {
+		// XXX A non-randomized shuffle will deal 10 and 7
+		// XXX so it's possible to get a false positive here
+		t.Error("Looks like randomize() failed")
+	}
+}
