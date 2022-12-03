@@ -8,36 +8,22 @@ import (
 )
 
 type Hand struct {
-	blackjack bool // This hand is a blacjack
-	doubled   bool // This hand has been doubled
-	busted    bool // This hand has busted
-	isSplit   bool // This hand is a split hand
-	// noHit     bool
-	// noDouble  bool
-	obsolete  bool   // This hand is obsolete, and should be ignored
-	shoe      *Shoe  // Shoe used to deal cards to this hand
-	betAmount int    // Amount that has beeen bet on this hand
-	value     int8   // Total point count in this hand
-	bigAces   int    // Number of aces being counted as 11 in this hand
-	cards     []int8 // Cards that make up this hand
+	isBlackjack      bool   // This hand is a blacjack
+	isDoubled        bool   // This hand has been doubled
+	isBusted         bool   // This hand has busted
+	isSplit          bool   // This hand is a split hand
+	hitNotAllowed    bool   // This hand may not be hit
+	doubleNotAllowed bool   // This hand may not be doubled
+	isObsolete       bool   // This hand is obsolete, and should be ignored
+	shoe             *Shoe  // Shoe used to deal cards to this hand
+	betAmount        int    // Amount that has beeen bet on this hand
+	value            int8   // Total point count in this hand
+	numBigAces       int    // Number of aces being counted as 11 in this hand
+	cards            []int8 // Cards that make up this hand
 }
 
 const ace = 11
 const softAce = 1
-
-// finishHAND is the common code that needs to run for all new hands,
-// both inital and split hands.
-
-func (h *Hand) finishHand() {
-	h.updateValue()
-	if h.value == 21 {
-		h.blackjack = true
-	}
-	if h.bigAces == 2 {
-		// This happens if the hand is ace-ace.
-		h.harden()
-	}
-}
 
 // newHand creates a new hand and deals its first 2 cards. This deals both
 // player and dealer hands. The caller should set betAmount to 0 for a dealer
@@ -64,8 +50,18 @@ func newSplitHand(s *Shoe, betAmount int, firstCard int8) *Hand {
 	h.cards = append(h.cards, s.deal())
 	h.isSplit = true
 	h.finishHand()
-	h.blackjack = false // No blackjacks on split pairs
 	return &h
+}
+
+// finishHAND is the common code that needs to run for all new hands,
+// both inital and split hands.
+
+func (h *Hand) finishHand() {
+	h.updateValue()
+	if h.numBigAces == 2 {
+		// This happens if the hand is ace-ace.
+		h.harden()
+	}
 }
 
 // String creates a printable string to represent a hand,
@@ -82,11 +78,11 @@ func (h *Hand) String() string {
 		sb.WriteString(strconv.Itoa(int(s)))
 	}
 	sb.WriteString(" | ")
-	writeFlag(&sb, h.blackjack, "J")
-	writeFlag(&sb, h.busted, "B")
-	writeFlag(&sb, h.doubled, "D")
+	writeFlag(&sb, h.isBlackjack, "J")
+	writeFlag(&sb, h.isBusted, "B")
+	writeFlag(&sb, h.isDoubled, "D")
 	writeFlag(&sb, h.isSplit, "S")
-	writeFlag(&sb, h.obsolete, "O")
+	writeFlag(&sb, h.isObsolete, "O")
 	sb.WriteString("}")
 
 	return sb.String()
@@ -106,25 +102,29 @@ func writeFlag(sb *strings.Builder, f bool, c string) {
 func (h *Hand) updateValue() {
 	var sum int8
 	for _, n := range h.cards {
-		sum += int8(n)
+		sum += n
 	}
 	h.value = sum
-	h.bigAces = countCard(ace, h.cards)
+	h.numBigAces = countCard(ace, h.cards)
 }
 
 // isSoft returns true if the hand is 'soft', i.e., there are one or more
 // aces in the hand that, when counted as 1, brings the total under 21.
 
 func (h *Hand) isSoft() bool {
-	return h.bigAces > 0
+	return h.numBigAces > 0
 }
 
 // double doubles the player's bet and deals one more card.
 
 func (h *Hand) double() {
-	h.betAmount *= 2
-	h.doubled = true
-	h.hit() // XXX should we do this here?
+	if !h.doubleNotAllowed {
+		h.betAmount *= 2
+		h.isDoubled = true
+		h.hit() // XXX should we do this here?
+	} else {
+		log.Panic("double not allowed")
+	}
 }
 
 // harden changes the value of the first ace in the hand from 11 to 1.
@@ -157,22 +157,25 @@ func (h *Hand) isPair() bool {
 // hit deals one more card to the hand, updates various flags.
 
 func (h *Hand) hit() {
-	if h.obsolete {
+	if h.isObsolete {
 		log.Panic("hand.hit: obsolete")
 	}
-	c := h.shoe.deal()
-	h.cards = append(h.cards, c)
-	h.updateValue()
-	if c == ace {
-		h.bigAces += 1
-	}
-	if h.value > 21 {
-		if h.isSoft() {
-			h.harden()
-		} else {
-			h.busted = true
+	if !h.hitNotAllowed {
+		c := h.shoe.deal()
+		h.cards = append(h.cards, c)
+		h.updateValue()
+		if c == ace {
+			h.numBigAces += 1
 		}
-
+		if h.value > 21 {
+			if h.isSoft() {
+				h.harden()
+			} else {
+				h.isBusted = true
+			}
+		}
+	} else {
+		log.Panic("hit not allowed")
 	}
 }
 

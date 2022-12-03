@@ -9,10 +9,6 @@ import (
 
 const bj_random_seed = 314159
 
-// XXX: These should be in hand.go
-// const ace = 11
-// const softAce = 1
-
 var suit = [13]int8{2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11}
 var deck [52]int8
 

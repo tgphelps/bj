@@ -15,9 +15,6 @@ func TestHand(t *testing.T) {
 	if h.betAmount != 2 {
 		t.Errorf("bad bet amount: %d", h.betAmount)
 	}
-	if h.blackjack {
-		t.Error("should not be blackjack")
-	}
 	if h.value != 17 {
 		t.Errorf("bad value: %d", h.value)
 	}
@@ -29,15 +26,62 @@ func TestHand(t *testing.T) {
 	if h.value != 21 {
 		t.Errorf("value should be 21: %d", h.value)
 	}
-	if !h.blackjack {
-		t.Error("should be blackjack")
-	}
-	s.force([]int8{1, 1})
+	s.force([]int8{11, 11})
 	h = newHand(s, 2)
 	if h.value != 12 {
 		t.Errorf("value should be 12: %d", h.value)
 	}
+	if !h.isSoft() {
+		t.Error("hand should be soft")
+	}
+	if !h.isPair() {
+		t.Error("hand should be a pair")
+	}
+}
 
+func TestHandHitting(t *testing.T) {
+	s := newShoe(1)
+	s.shuffle()
+	h := newHand(s, 2)
+	// should be 10 7
+	h.double()
+	if !h.isDoubled {
+		t.Error("hand should be doubled")
+	}
+	if !h.isBusted {
+		t.Error("hand should be busted")
+	}
+	if h.betAmount != 4 {
+		t.Error("bet amount should be 4")
+	}
+	h = newHand(s, 2)
+	// Should be 9, 3
+	h.hit()
+	if h.value != 20 {
+		t.Error("value should be 20")
+	}
+	h.hit()
+	if h.value <= 21 {
+		t.Error("value should be > 21")
+	}
+	if !h.isBusted {
+		t.Error("hand should be busted")
+	}
+}
+
+func TestSplitHand(t *testing.T) {
+	s := newShoe(1)
+	s.shuffle()
+	h := newSplitHand(s, 2, 10)
+	if h.value != 20 {
+		t.Error("value should be 20")
+	}
+	if !h.isSplit {
+		t.Error("hand should be split")
+	}
+	if !h.isPair() {
+		t.Error("hand should be a pair")
+	}
 }
 
 //func TestCards(t *testing.T) {
