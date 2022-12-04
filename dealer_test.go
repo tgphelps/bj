@@ -9,6 +9,7 @@ func TestDealer(t *testing.T) {
 	// s.randomize()
 	s.shuffle()
 	d := newDealer(s, true) // hit soft
+
 	d.getHand()
 	if d.hand.value != 17 {
 		t.Error("dealer should have 17")
@@ -19,6 +20,12 @@ func TestDealer(t *testing.T) {
 	d.playHand()
 	if d.hand.value != 17 {
 		t.Error("after dealer play, should have 17")
+	}
+
+	s.force([]int8{10, 11})
+	d.getHand()
+	if !d.hand.isBlackjack {
+		t.Error("dealer should have blackjack")
 	}
 }
 func TestDealerSoft17(t *testing.T) {

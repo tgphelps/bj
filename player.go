@@ -33,7 +33,11 @@ func newPlayer(seat int, shoe *Shoe, cfg *Config, strategy Strategy, betAmount i
 // getHand gets one new 2-card hand
 
 func (p *Player) getHand() {
-	p.hands = append(p.hands, newHand(p.shoe, p.betAmount))
+	h := newHand(p.shoe, p.betAmount)
+	if h.value == 21 {
+		h.isBlackjack = true
+	}
+	p.hands = append(p.hands, h)
 }
 
 // getSplitHand get one new card to go with one of a split pair
@@ -71,7 +75,6 @@ func (p *Player) playHands(upcard int8) {
 
 func (p *Player) endRound() {
 	p.hands = nil
-	// p.splitCount = 0
 }
 
 // maybeSurrender will surrender, if the strategy says to do so. If it
@@ -128,7 +131,7 @@ func (p *Player) playNormal(h *Hand, upcard int8) {
 
 // playStrategy will hit the hand, if the strategy says to do so.
 // It returns true if we hit AND we don't bust, else it returns false.
-// If we return false, the caller will not need to do any more with this hand.
+// If it returns false, the caller will not need to do any more with this hand.
 
 func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
 	var ret bool

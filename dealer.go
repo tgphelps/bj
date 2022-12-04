@@ -24,6 +24,9 @@ func newDealer(shoe *Shoe, hit_s17 bool) *Dealer {
 
 func (d *Dealer) getHand() {
 	d.hand = newHand(d.shoe, 0)
+	if d.hand.value == 21 {
+		d.hand.isBlackjack = true
+	}
 }
 
 // upCard returns the value of the dealer's up-card.
