@@ -60,13 +60,16 @@ func (p *Player) getSplitHand(firstCard int8) {
 
 func (p *Player) playHands(upcard int8) {
 	for _, h := range p.hands {
-		if !p.maybeSurrender(h, upcard) {
-			if !p.maybeSplit(h, upcard) {
-				if !p.maybeDouble(h, upcard) {
-					p.playNormal(h, upcard)
-					log.Printf("P%d final hand: %s\n", p.seat, h)
-				}
-			}
+		// Play a hand.
+		switch {
+		case p.shouldSurrender(h):
+			log.Panic("not implemented")
+		case p.shouldSplit(h):
+			log.Panic(("not implemented"))
+		case p.shouldDouble(h):
+			log.Panic("not implemented")
+		default:
+			p.playNormal(h, upcard)
 		}
 	}
 }
@@ -77,36 +80,15 @@ func (p *Player) endRound() {
 	p.hands = nil
 }
 
-// maybeSurrender will surrender, if the strategy says to do so. If it
-// does surrender, it returns true, else false.
-
-func (p *Player) maybeSurrender(h *Hand, upcard int8) bool {
-	// XXX do this some day
+func (p *Player) shouldSurrender(h *Hand) bool {
 	return false
 }
 
-// maybeDouble will double a hand, if the strategy says to do so. If it
-// does double, it returns true, else false.
-
-func (p *Player) maybeDouble(h *Hand, upcard int8) bool {
-	if h.isSplit && !p.cfg.dasAllowed {
-		log.Println("DAS not allowed")
-		return false
-	}
-	if !h.isSoft() {
-		// Double hard hand?
-		return false
-	} else {
-		// Double soft hand?
-		return false
-	}
+func (p *Player) shouldSplit(h *Hand) bool {
+	return false
 }
 
-// maybeSplit will split a pair, if the strategy says to do so. If it
-// does split, it returns true, else false.
-
-func (p *Player) maybeSplit(h *Hand, upcard int8) bool {
-	// fmt.Println("XXX fix maybeSplit")
+func (p *Player) shouldDouble(h *Hand) bool {
 	return false
 }
 
@@ -114,15 +96,18 @@ func (p *Player) maybeSplit(h *Hand, upcard int8) bool {
 
 func (p *Player) playNormal(h *Hand, upcard int8) {
 	var s StrPoint
+	var busted bool
 	for {
 		if h.isSoft() {
 			s = StrPoint{keyHitSoft, h.value, upcard}
-			if !p.playStrategy(s, h) {
+			busted = !p.playStrategy(s, h)
+			if busted {
 				break
 			}
 		} else {
 			s = StrPoint{keyHitHard, h.value, upcard}
-			if !p.playStrategy(s, h) {
+			busted = !p.playStrategy(s, h)
+			if busted {
 				break
 			}
 		}

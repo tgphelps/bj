@@ -48,12 +48,12 @@ type Strategy map[StrPoint]bool
 
 // This contains all information collected during a Game.
 
-//type Statistics struct {
-//	roundsPlayed  int
-//	handsPlayed   int
-//	blackjacksWon int
-//	totalBet      int
-//	totalWon      int
-//	totalLost     int
-//	totalPush     int
-//}
+type Statistics struct {
+	roundsPlayed  int
+	handsPlayed   int
+	blackjacksWon int
+	totalBet      int
+	totalWon      int
+	totalLost     int
+	totalPush     int
+}
