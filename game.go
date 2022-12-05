@@ -154,13 +154,12 @@ func (g *Game) updateStats() {
 // the rounds we just played.
 
 func (g *Game) writeStats(fileName string, strategyName string) {
-	var gain float32
+	var gain float64
 
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatal("FATAL: ", err)
 	}
-
 	defer f.Close()
 	// XXX The following assumes a blackjack pays 3:2
 	if g.st.totalWon+g.st.totalLost+g.st.totalPush-g.st.blackjacksWon != g.st.totalBet {
@@ -177,7 +176,7 @@ func (g *Game) writeStats(fileName string, strategyName string) {
 	fmt.Fprintf(f, "totalPush %d\n", g.st.totalPush)
 	fmt.Fprintf(f, "blackjacksWon %d\n", g.st.blackjacksWon)
 	if g.st.totalBet > 0 {
-		gain = float32(100*(g.st.totalWon-g.st.totalLost)) / float32(g.st.totalBet)
+		gain = float64(100*(g.st.totalWon-g.st.totalLost)) / float64(g.st.totalBet)
 		fmt.Fprintf(f, "pct win = %6.4f\n", gain)
 	}
 }

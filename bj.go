@@ -58,10 +58,10 @@ func main() {
 		log.SetOutput(f)
 	}
 	log.SetFlags(0)
-	log.Println("log opened")
-	log.Printf("repeatable = %v\n", params.repeatable)
-	log.Printf("num rounds = %d\n", params.numRounds)
-	log.Printf("num seats = %d\n", params.numSeats)
+	log.Println("init: log opened")
+	log.Printf("init: repeatable = %v\n", params.repeatable)
+	log.Printf("init: num rounds = %d\n", params.numRounds)
+	log.Printf("init: num seats = %d\n", params.numSeats)
 
 	err := readConfigFile(params.configFile, &cfg)
 	if err != nil {
@@ -80,6 +80,6 @@ func main() {
 	//game.playRound()
 	//}
 	//game.writeStats(statsFileName, params.strategyFile)
-	log.Println("log closing")
+	log.Println("term: log closing")
 	// XXX Check for needing to close the log file.
 }
