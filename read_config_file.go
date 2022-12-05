@@ -54,31 +54,37 @@ func readConfigFile(cfgFile string, cfg *Config) error {
 }
 
 func setConfigVar(tag string, val string, cfg *Config) {
-	n, err := strconv.Atoi(val)
-	if err != nil {
-		log.Panic("BAD config line")
-	} else {
-		switch tag {
-		case "numDecks":
-			cfg.numDecks = n
-		case "hitS17":
-			cfg.hitS17 = toBool(n)
-		case "dasAllowed":
-			cfg.dasAllowed = toBool(n)
-		case "maxSplitHands":
-			cfg.maxSplitHands = n
-		case "maxSplitAces":
-			cfg.maxSplitAces = n
-		case "canHitSplitAces":
-			cfg.canHitSplitAces = toBool(n)
-		case "canSurrender":
-			cfg.canSurrender = toBool(n)
-		case "penetrationPct":
-			cfg.penetrationPct = n
-		default:
-			panic("BAD config line")
+	var n int
+	var err error
+	if tag != "statsFilename" {
+		n, err = strconv.Atoi(val)
+		if err != nil {
+			log.Panic("BAD config line")
 		}
 	}
+	switch tag {
+	case "numDecks":
+		cfg.numDecks = n
+	case "hitS17":
+		cfg.hitS17 = toBool(n)
+	case "dasAllowed":
+		cfg.dasAllowed = toBool(n)
+	case "maxSplitHands":
+		cfg.maxSplitHands = n
+	case "maxSplitAces":
+		cfg.maxSplitAces = n
+	case "canHitSplitAces":
+		cfg.canHitSplitAces = toBool(n)
+	case "canSurrender":
+		cfg.canSurrender = toBool(n)
+	case "penetrationPct":
+		cfg.penetrationPct = n
+	case "statsFilename":
+		cfg.statsFilename = val
+	default:
+		panic("BAD config line")
+	}
+
 }
 
 func toBool(n int) bool {

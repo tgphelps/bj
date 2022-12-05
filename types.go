@@ -18,11 +18,12 @@ type Config struct {
 	canHitSplitAces bool
 	canSurrender    bool
 	penetrationPct  int
+	statsFilename   string
 }
 
 // XXX: This constant MUST be kept in sync with the Config struct, and
 // XXX: with the code in read_config_file.go.
-const numConfigParams = 8
+const numConfigParams = 9
 
 // A StrPoint (strategy point) represents a decision to be made. It consists of 3 numbers:
 // 1. key - what we might do (hit, double, split, etc.)

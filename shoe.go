@@ -88,6 +88,7 @@ func (s *Shoe) deal() int8 {
 		c := s.cards[s.next]
 		s.next += 1
 		s.remaining -= 1
+		//log.Printf("deal: %d", c)
 		return c
 	} else {
 		temp := s.queue.Front()

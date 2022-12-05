@@ -23,12 +23,13 @@ type Game struct {
 // We shuffle the Shoe and create a new Dealer. Finally, we create some
 // number of new Players for the game.
 
-func newGame(strategy Strategy, numPlayers int, penetration int, repeatable bool, cfg *Config) *Game {
+func newGame(strategy Strategy, numPlayers int,
+	repeatable bool, cfg *Config) *Game {
 	var g Game
 
 	g.strategy = strategy
 	g.cfg = cfg
-	g.shufflePoint = cfg.numDecks * 52 * penetration / 100
+	g.shufflePoint = cfg.numDecks * 52 * cfg.penetrationPct / 100
 	g.hitS17 = cfg.hitS17
 	g.shoe = newShoe(cfg.numDecks)
 	g.numPlayers = numPlayers
@@ -145,7 +146,7 @@ func (g *Game) updateStats() {
 			}
 		}
 	}
-	fmt.Println("----------END")
+	log.Println("----------END")
 }
 
 // writeStats is called after all rounds have been played. It appends
