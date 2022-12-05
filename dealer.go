@@ -1,5 +1,7 @@
 package main
 
+import "log"
+
 // "fmt"
 
 // Dealer represents a casino dealer, who plays his hand according to the
@@ -47,6 +49,6 @@ func (d *Dealer) upCard() int8 {
 func (d *Dealer) playHand() {
 	for (d.hand.value < 17) || (d.hand.value == 17 && d.hand.isSoft() && d.hit_s17) {
 		d.hand.hit()
-		// log.Printf("dealer hit. Hand: %s\n", d.hand)
+		log.Printf("dealer: HIT. Hand: %s\n", d.hand)
 	}
 }

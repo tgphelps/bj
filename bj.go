@@ -74,12 +74,11 @@ func main() {
 		log.Panic(err)
 	}
 
-	//game := newGame(strategy, params.numSeats, cfg.penetrationPct, params.repeatable, &cfg)
-	//for i := 0; i < params.numRounds; i++ {
-	//log.Printf("ROUND %d\n", i+1)
-	//game.playRound()
-	//}
-	//game.writeStats(statsFileName, params.strategyFile)
+	game := newGame(strategy, params.numSeats, params.repeatable, &cfg)
+	for i := 0; i < params.numRounds; i++ {
+		log.Printf("ROUND %d\n", i+1)
+		game.playRound()
+	}
+	game.writeStats(cfg.statsFilename, params.strategyFile)
 	log.Println("term: log closing")
-	// XXX Check for needing to close the log file.
 }

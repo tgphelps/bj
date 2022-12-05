@@ -122,7 +122,7 @@ func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
 	var ret bool
 	if p.strategy[s] {
 		h.hit()
-		log.Printf("HIT. Hand: %s\n", h)
+		log.Printf("play: HIT. Hand: %s\n", h)
 		if h.isBusted {
 			ret = false
 		} else {

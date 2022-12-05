@@ -70,7 +70,7 @@ func (g *Game) playRound() {
 		}
 	}
 	g.dealer.getHand()
-	log.Printf("play: dealer hand: %s\n", g.dealer.hand)
+	log.Printf("dealer: dealer hand: %s\n", g.dealer.hand)
 	if g.dealer.hand.isBlackjack {
 		log.Println("play: dealer BLACKJACK")
 	} else {
@@ -122,7 +122,7 @@ func (g *Game) updateStats() {
 					log.Println("stats: PUSH: blackjacks")
 				} else {
 					g.st.totalLost += h.betAmount
-					fmt.Printf("stats: LOSE %d: dealer BJ\n", h.betAmount)
+					log.Printf("stats: LOSE %d: dealer BJ\n", h.betAmount)
 				}
 			} else {
 				// Nobody had a blackjack
