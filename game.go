@@ -64,24 +64,24 @@ func (g *Game) playRound() {
 	for _, p := range g.players {
 		p.getHand()
 		g.st.handsPlayed += 1
-		log.Printf("P%d hand: %s\n", p.seat, p.hands[0])
+		log.Printf("play: P%d hand: %s\n", p.seat, p.hands[0])
 		if p.hands[0].isBlackjack {
-			log.Printf("P%d blackjack\n", p.seat)
+			log.Printf("play: P%d blackjack\n", p.seat)
 		}
 	}
 	g.dealer.getHand()
-	log.Printf("dealer hand: %s\n", g.dealer.hand)
+	log.Printf("play: dealer hand: %s\n", g.dealer.hand)
 	if g.dealer.hand.isBlackjack {
-		log.Println("dealer BLACKJACK")
+		log.Println("play: dealer BLACKJACK")
 	} else {
 		for _, p := range g.players {
-			log.Printf("Play seat %d:\n", p.seat)
+			log.Printf("play: seat %d:\n", p.seat)
 			p.playHands(g.dealer.upCard())
 		}
 		g.dealer.playHand()
 	}
 	g.updateStats()
-	log.Println("clear player hands")
+	// log.Println("clear player hands")
 	for _, p := range g.players {
 		p.endRound()
 	}
@@ -96,14 +96,14 @@ func (g *Game) updateStats() {
 	dlrBj := g.dealer.hand.isBlackjack
 	dlrBust := g.dealer.hand.isBusted
 
-	log.Println("----------RESULTS")
-	log.Printf("   Dealer has %d\n", dlrVal)
+	log.Println("stats: RESULTS")
+	log.Printf("stats: Dealer has %d\n", dlrVal)
 	for _, p := range g.players {
 		for n, h := range p.hands {
 			// n = hand number, h = hand struct
-			log.Printf("   P%d hand %d: %d\n", p.seat, n+1, h.value)
+			log.Printf("stats: P%d hand %d: %d\n", p.seat, n+1, h.value)
 			if h.isObsolete {
-				log.Println("   OBSOLETE")
+				log.Println("stats: OBSOLETE")
 				continue
 			}
 			// Hand is not obsolete
@@ -112,41 +112,40 @@ func (g *Game) updateStats() {
 				g.st.blackjacksWon += 1
 				win := (3 * h.betAmount / 2)
 				g.st.totalWon += win
-				log.Printf("   WIN %d: BJ\n", win)
-
+				log.Printf("stats: WIN %d: BJ\n", win)
 				continue
 			}
 			// This hand did not win with a blackjack
 			if dlrBj {
 				if h.isBlackjack {
 					g.st.totalPush += h.betAmount
-					log.Println("   PUSH: blackjacks")
+					log.Println("stats: PUSH: blackjacks")
 				} else {
 					g.st.totalLost += h.betAmount
-					fmt.Printf("LOSE %d: dealer BJ\n", h.betAmount)
+					fmt.Printf("stats: LOSE %d: dealer BJ\n", h.betAmount)
 				}
 			} else {
 				// Nobody had a blackjack
 				if h.isBusted {
 					g.st.totalLost += h.betAmount
-					log.Printf("   LOSE %d: bust\n", h.betAmount)
+					log.Printf("stats: LOSE %d: bust\n", h.betAmount)
 				} else if dlrBust {
 					g.st.totalWon += h.betAmount
-					log.Printf("   WIN %d: dealer bust\n", h.betAmount)
+					log.Printf("stats: WIN %d: dealer bust\n", h.betAmount)
 				} else if dlrVal > h.value {
 					g.st.totalLost += h.betAmount
-					log.Printf("   LOSE %d\n", h.betAmount)
+					log.Printf("stats: LOSE %d\n", h.betAmount)
 				} else if h.value > dlrVal {
 					g.st.totalWon += h.betAmount
-					log.Printf("   WIN %d\n", h.betAmount)
+					log.Printf("stats: WIN %d\n", h.betAmount)
 				} else {
 					g.st.totalPush += h.betAmount
-					log.Println("   PUSH")
+					log.Println("stats: PUSH")
 				}
 			}
 		}
 	}
-	log.Println("----------END")
+	log.Println("stats: END")
 }
 
 // writeStats is called after all rounds have been played. It appends
