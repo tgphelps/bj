@@ -129,6 +129,7 @@ func (p *Player) playNormal(h *Hand, upcard int8) {
 func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
 	var ret bool
 	if p.strategy[s] {
+		log.Printf("act: %s YES", &s)
 		h.hit()
 		log.Printf("play: HIT. Hand: %s\n", h)
 		if h.isBusted {
@@ -137,6 +138,7 @@ func (p *Player) playStrategy(s StrPoint, h *Hand) bool {
 			ret = true
 		}
 	} else {
+		log.Printf("act: %s NO", &s)
 		ret = false
 	}
 	return ret

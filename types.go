@@ -1,5 +1,10 @@
 package main
 
+import (
+	"strconv"
+	"strings"
+)
+
 type CmdLineParams struct {
 	repeatable   bool
 	numRounds    int
@@ -32,6 +37,7 @@ const numConfigParams = 9
 
 type StrPoint [3]int8
 
+// These go in the 'key' field of a StrPoint
 const (
 	keyHitHard = iota + 50
 	keyHitSoft
@@ -40,6 +46,27 @@ const (
 	keyDblSoft
 	keySurrender
 )
+
+var keymap = map[int8]string{
+	keyHitHard:   "HH",
+	keyHitSoft:   "HS",
+	keySplit:     "SP",
+	keyDblHard:   "DH",
+	keyDblSoft:   "DS",
+	keySurrender: "SU",
+}
+
+func (s *StrPoint) String() string {
+	var sb strings.Builder
+	sb.WriteString("str{")
+	sb.WriteString(keymap[s[0]])
+	sb.WriteString(", ")
+	sb.WriteString(strconv.Itoa(int(s[1])))
+	sb.WriteString(", ")
+	sb.WriteString(strconv.Itoa(int(s[2])))
+	sb.WriteString("}")
+	return sb.String()
+}
 
 // One Strategy drives all playing decisions.  It is built by reading the
 // strategy file, and defines the circumstances under which we surrender,
