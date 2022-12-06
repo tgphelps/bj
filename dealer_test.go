@@ -1,10 +1,13 @@
 package main
 
 import (
+	"io"
+	"log"
 	"testing"
 )
 
 func TestDealer(t *testing.T) {
+	log.SetOutput(io.Discard)
 	s := newShoe(1)
 	// s.randomize()
 	s.shuffle()
@@ -40,6 +43,7 @@ func TestDealerSoft17(t *testing.T) {
 	d = newDealer(s, false)
 	s.force([]int8{11, 6, 3})
 	d.getHand()
+	d.playHand()
 	if d.hand.value != 17 {
 		t.Error("dealer should not have hit S17")
 	}
