@@ -89,7 +89,15 @@ func (p *Player) shouldSplit(h *Hand) bool {
 }
 
 func (p *Player) shouldDouble(h *Hand) bool {
-	return false
+	if h.isSplit && !p.cfg.dasAllowed {
+		log.Println("DAS not allowed")
+		return false
+	}
+	if h.isSoft() {
+		return false
+	} else {
+		return false
+	}
 }
 
 // playNormal plays a hand using only the hit/stand strategy.

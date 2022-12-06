@@ -1,0 +1,10 @@
+time 2022-12-06 12:38:05
+strategy data/01-never-bust.txt
+roundsPlayed 20000000
+handsPlayed 100000000
+totalBet 200000000
+totalWon 89372562
+totalLost 101928578
+totalPush 13228670
+blackjacksWon 4529810
+pct win = -6.2780

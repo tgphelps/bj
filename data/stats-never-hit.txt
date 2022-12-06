@@ -1,0 +1,10 @@
+time 2022-12-06 12:35:48
+strategy data/00-never-hit.txt
+roundsPlayed 20000000
+handsPlayed 100000000
+totalBet 200000000
+totalWon 81736475
+totalLost 113219190
+totalPush 9571810
+blackjacksWon 4527475
+pct win = -15.7414
